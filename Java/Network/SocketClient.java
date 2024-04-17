@@ -64,7 +64,6 @@ public class SocketClient implements Client {
 
     @Override
     public void buyProduct(Product product) {
-
         try {
             Request buyRequest = new Request("BuyProduct", product);
             outToServer.writeObject(buyRequest);
