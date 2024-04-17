@@ -1,4 +1,4 @@
-package Model;
+package Shared.TransferObject;
 
 import java.util.ArrayList;
 
@@ -14,8 +14,6 @@ public class Product {
         this.price = price;
         this.quantity = quantity;
     }
-
-
 
 
     public String getName() {

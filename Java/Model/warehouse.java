@@ -1,8 +1,7 @@
 package Model;
 
-import Model.Product;
+import Shared.TransferObject.Product;
 
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
 public class warehouse  {
