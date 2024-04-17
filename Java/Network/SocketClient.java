@@ -68,7 +68,6 @@ public class SocketClient implements Client {
             Request buyRequest = new Request("BuyProduct", product);
             outToServer.writeObject(buyRequest);
             boughtProducts.add(product);
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
