@@ -10,11 +10,12 @@ public class BuyingManagerImpl implements BuyingManager{
 
     public BuyingManagerImpl(){
         products = new ArrayList<>();
-        System.out.println("BuyingManager added");
-}
+        System.out.println("BuyingManagerImpl added");
+    }
 
     @Override
     public ArrayList<Product> getProducts() {
         return new ArrayList<>(products);
     }
+
 }
