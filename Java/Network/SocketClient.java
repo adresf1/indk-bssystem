@@ -39,6 +39,7 @@ public class SocketClient implements Client {
 
     public SocketClient(ObjectOutputStream outToServer) {
         this.outToServer = outToServer;
+        boughtProducts = new ArrayList<>();
     }
 
     private void listenToServer(ObjectOutputStream outToServer, ObjectInputStream inFromServer) {

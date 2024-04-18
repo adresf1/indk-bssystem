@@ -45,17 +45,53 @@ class SocketClientTest {
         Product product = new Product("Beans", 10.0,1);
         Request request = new Request("BuyProduct", null);
 
-        socketClient.moveToBasket(request);
+    try {
+    socketClient.moveToBasket(request);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
         String responseString = new String(outputStream.toByteArray());
         System.out.println("Response: " + responseString);
         assertEquals(0,socketClient.getBoughtProducts().size());
-
     }
 
     @Test
     public void testMoveToBasket_validInput() {
+        Product product = new Product("Beans", 10.0,1);
+        Request request = new Request("BuyProduct", product);
 
+        try {
+            socketClient.moveToBasket(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String responseString = new String(outputStream.toByteArray());
+        System.out.println("Response: " + responseString);
+        assertEquals(1,socketClient.getBoughtProducts().size());
     }
+
+    @Test
+    public void testMoveToBasket_manyValidInput() {
+        Product product = new Product("Beans", 10.0,1);
+        Request request = new Request("BuyProduct", product);
+        Request request1 = new Request("BuyProduct", product);
+        Request request2 = new Request("BuyProduct", product);
+
+        try {
+            socketClient.moveToBasket(request);
+            socketClient.moveToBasket(request1);
+            socketClient.moveToBasket(request2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String responseString = new String(outputStream.toByteArray());
+        System.out.println("Response: " + responseString);
+        assertEquals(3,socketClient.getBoughtProducts().size());
+    }
+
     @Test
     void testGetBoughtProducts() {
     }
