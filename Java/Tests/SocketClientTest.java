@@ -1,0 +1,62 @@
+package Tests;
+
+import Network.SocketClient;
+import Server.networking.SocketHandler;
+import Shared.TransferObject.Product;
+import Shared.TransferObject.Request;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.*;
+import java.security.PrivateKey;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class SocketClientTest {
+    private SocketClient socketClient;
+    private ObjectOutputStream outToServerStub;
+    private ByteArrayOutputStream outputStream;
+    private ObjectInputStream inputStream;
+    private ByteArrayInputStream inToClientStub;
+
+
+    @BeforeEach
+    public void setUp() throws IOException {
+        byte[] Arr = new byte[10];
+        // Create a ByteArrayOutputStream to capture the data written to the ObjectOutputStream
+        outputStream = new ByteArrayOutputStream();
+        // Create ObjectOutputStream using the ByteArrayOutputStream
+        outToServerStub = new ObjectOutputStream(outputStream);
+        // Create SocketHandler with the stub ObjectOutputStream
+        socketClient = new SocketClient(outToServerStub);
+
+    }
+    @Test
+    public void testGetProduct() {
+
+    }
+
+    @Test
+    void testBuyProduct() {
+    }
+
+    @Test
+    public void testMoveToBasket_invalidInput() {
+        Product product = new Product("Beans", 10.0,1);
+        Request request = new Request("BuyProduct", null);
+
+        socketClient.moveToBasket(request);
+        String responseString = new String(outputStream.toByteArray());
+        System.out.println("Response: " + responseString);
+        assertEquals(0,socketClient.getBoughtProducts().size());
+
+    }
+
+    @Test
+    public void testMoveToBasket_validInput() {
+
+    }
+    @Test
+    void testGetBoughtProducts() {
+    }
+}

@@ -1,9 +1,5 @@
 package Server.networking;
-
-
-
 import Shared.TransferObject.Request;
-
 import java.io.IOException;
 import java.util.ArrayList;
 

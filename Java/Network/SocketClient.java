@@ -10,12 +10,13 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SocketClient implements Client {
     private PropertyChangeSupport support;
-    private ObjectOutputStream outToServer, outToServer1;
+    private ObjectOutputStream outToServer;
 
-    private ObjectInputStream inFromServer, inFromServer1;
+    private ObjectInputStream inFromServer;
 
     private ArrayList<Product> boughtProducts;
 
@@ -36,6 +37,10 @@ public class SocketClient implements Client {
         }
     }
 
+    public SocketClient(ObjectOutputStream outToServer) {
+        this.outToServer = outToServer;
+    }
+
     private void listenToServer(ObjectOutputStream outToServer, ObjectInputStream inFromServer) {
         try {
             //this.outToServer.writeObject(new Request("Listener", null));
@@ -44,7 +49,10 @@ public class SocketClient implements Client {
                 Request request = (Request) this.inFromServer.readObject();
                 if ("ProductBought".equals(request.getType())){
                     System.out.println("Confirmation received from server");
-                } else {
+                    moveToBasket(request);
+                    System.out.println(boughtProducts);
+                }
+                else {
                     System.out.println("Request type not recognized ");
                 }
 
@@ -77,9 +85,16 @@ public class SocketClient implements Client {
         try {
             Request buyRequest = new Request("BuyProduct", product);
             outToServer.writeObject(buyRequest);
-            boughtProducts.add(product);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void moveToBasket(Request request) {
+        if (request.getArg() instanceof Product) {
+            boughtProducts.add((Product) request.getArg());
+        } else {
+            throw new RuntimeException("request.getArg returned null with expected type being product");
         }
     }
     @Override

@@ -3,7 +3,6 @@ package Server.networking;
 import Server.model.BuyingManager;
 import Shared.TransferObject.Product;
 import Shared.TransferObject.Request;
-import Shared.Util.Response;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -37,6 +36,10 @@ public class SocketHandler implements Runnable{
         }
     }
 
+    public SocketHandler(ObjectOutputStream outToClient) {
+        this.outToClient = outToClient;
+    }
+
     @Override
     public void run() {
         while(true){
@@ -44,7 +47,7 @@ public class SocketHandler implements Runnable{
                 Request request = (Request) inFromClient.readObject();
 
                 if ("BuyProduct".equals(request.getType())) {
-                    System.out.println("Message Recieved of type: BuyProduct");
+                    System.out.println("Message Received of type: BuyProduct");
                     buyProduct(request);
                 }
                 else {
@@ -54,16 +57,11 @@ public class SocketHandler implements Runnable{
                 throw new RuntimeException(e);
             }
         }
-
-
     }
 
     public void buyProduct(Request request) throws IOException {
         Product productToBuy = (Product) request.getArg();
-        // Confirm the purchase to the client
-        //TODO: vil du sende et response eller en request tilbage til client som  bekræftelse? Sockets kan ikke lide din klasse respons
-        outToClient.writeObject(new Response("ProductBought", null));
-        // Print a message for testing purposes
+        outToClient.writeObject(new Request("ProductBought", productToBuy));
         System.out.println("SocketHandler speaking: buyProduct");
     }
 }
