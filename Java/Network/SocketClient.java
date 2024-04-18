@@ -38,11 +38,21 @@ public class SocketClient implements Client {
 
     private void listenToServer(ObjectOutputStream outToServer, ObjectInputStream inFromServer) {
         try {
-            this.outToServer.writeObject(new Request("Listener", null));
+            //this.outToServer.writeObject(new Request("Listener", null));
 
-        } catch (IOException e) {
+            while(true){
+                Request request = (Request) this.inFromServer.readObject();
+                if ("ProductBought".equals(request.getType())){
+                    System.out.println("Confirmation received from server");
+                } else {
+                    System.out.println("Request type not recognized ");
+                }
+
+            }
+        } catch (IOException|ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
@@ -52,7 +62,7 @@ public class SocketClient implements Client {
     @Override
     public ArrayList<Product> getProduct() {
         try {
-            outToServer.writeObject(new Request("Products", null));
+            outToServer.writeObject(new Request("getProductList", null));
             Request response = (Request) inFromServer.readObject();
             return (ArrayList<Product>) response.getArg();
 
