@@ -1,9 +1,12 @@
 package Shared.TransferObject;
 
+import Model.ProductDAO;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Product implements Serializable {
+public class Product implements Serializable
+{
 
     private String name;
     private double price;
