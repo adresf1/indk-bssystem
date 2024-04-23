@@ -1,64 +1,27 @@
 package Shared.TransferObject;
 
+import Shared.Util.Certification;
+import Shared.Util.MyDate;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+
 
 public class Product implements Serializable {
 
     private String name;
+    private int category;
+    private String productDescription;
+    private MyDate productionDate, expirationDate;
+
+    private int barcode;
     private double price;
     private int quantity;
+    private String unitYpe;
+    private ArrayList<Certification> certificates;
 
-
-    public Product(String name, double price, int quantity) {
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
+    public Product() {
+        certificates = new ArrayList<Certification>();
     }
-
-
-    public String getName() {
-        return name;
-    }
-
-
-    public double getPrice() {
-        return price;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    // Setter methods
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-
-   /* public double calculateTotalPrice(int quantity) {
-        return price * quantity;
-    }
-
-    public void decreaseQuantity(int quantityPurchased) {
-        if (quantityPurchased <= quantity) {
-            quantity -= quantityPurchased;
-        } else {
-            System.out.println("Insufficient quantity available.");
-        }
-    }
-
-
-    public void increaseQuantity(int quantityRestocked) {
-        quantity += quantityRestocked;
-    }
-
-    */
-
-
 
 }
