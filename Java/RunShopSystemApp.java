@@ -8,7 +8,7 @@ public class RunShopSystemApp {
     {
 
         SocketClient client = new SocketClient();
-        client.buyProduct(new Product("Example Product", 10.0, 1));
+       // client.buyProduct(new Product("Example Product", 10.0, 1));
         client.startClient();
     }
 }

@@ -12,4 +12,5 @@ public interface Certification {
 
     public String getOrganization();
 
+    String getCountry();
 }

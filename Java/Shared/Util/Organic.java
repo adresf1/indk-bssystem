@@ -1,7 +1,5 @@
 package Shared.Util;
 
-import com.example.javafxSEP.Java_files.MyDate;
-
 public class Organic implements Certification{
     public String id, database, description;
     public MyDate certificationDate, expirationDate;
@@ -84,5 +82,10 @@ public class Organic implements Certification{
     @Override
     public String getOrganization() {
         return orginization;
+    }
+
+    @Override
+    public String getCountry() {
+        return originCountry;
     }
 }

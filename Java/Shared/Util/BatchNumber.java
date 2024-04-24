@@ -35,4 +35,9 @@ public class BatchNumber implements Certification{
     public String getOrganization() {
         return orginization;
     }
+
+    @Override
+    public String getCountry() {
+        return originCountry;
+    }
 }

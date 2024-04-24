@@ -18,35 +18,29 @@ public class MyDate {
         set(now.get(Calendar.MONTH),now.get(Calendar.DAY_OF_MONTH) + 1,now.get(Calendar.YEAR));
 
     }
-    public void set(int month, int day, int year){
-        //Year handler
-        if (year<0){
-            this.year=year*-1;
-        }
-        else{
-            this.year = year;
-        }
 
-        //Month Handler
-        if (month<1){
+
+    public void set(int month, int day, int year) {
+        // Normalize negative year values
+        this.year = Math.abs(year);
+
+        // Normalize the month within [1, 12]
+        if (month < 1) {
             this.month = 1;
-        }
-        else if(month>12){
-            this.month=12;
-        }
-        else{
-            this.month=month;
+        } else if (month > 12) {
+            this.month = 12;
+        } else {
+            this.month = month;
         }
 
-        //Day Handler
-        if (day<1){
+        // Normalize the day to fit within the number of days in the given month
+        int maxDays = this.numberOfDaysInMonth();
+        if (day < 1) {
             this.day = 1;
-        }
-        else if(day>numberOfDaysInMonth()){
-            this.day=numberOfDaysInMonth();
-        }
-        else{
-            this.day=day;
+        } else if (day > maxDays) {
+            this.day = maxDays;
+        } else {
+            this.day = day;
         }
     }
 
@@ -54,43 +48,18 @@ public class MyDate {
         if(!(obj instanceof MyDate)){
             return false;
         }
-        if (this.toString().equals(((MyDate)obj).toString()))
-        {
-            return true;
-        }
-        else {return false;}
+        MyDate other = (MyDate) obj;
+        return this.day == other.day && this.month == other.month && this.year == other.year;
     }
     public String toString(){
         String result="";
 
         //if days is single digit
-        if(day<10){
-            result += "0"+Integer.toString(day) + "/";
-        }
-        else {
-            result += Integer.toString(day) + "/";
-        }
-
-        //if month is single digit
-        if(month<10){
-            result += "0"+Integer.toString(month) + "/";
-        }
-        else {
-            result += Integer.toString(month) + "/";
-        }
-
-        if(year<10){
-            result += "000"+Integer.toString(year);
-        }
-        else if (year < 100) {
-            result += "00" + Integer.toString(year);
-        }
-        else if (year < 1000) {
-            result += "0" + Integer.toString(year);
-        }
-        else {
-            result += Integer.toString(year);
-        }
+        result += String.format("%02d/", this.day);
+        // Month as two digits
+        result += String.format("%02d/", this.month);
+        // Year as four digits
+        result += String.format("%04d", this.year);
         return result;
     }
 
@@ -157,31 +126,29 @@ public class MyDate {
     }
 
     public void stepBackwardOneDay(){
-        day--;
-        if(day<1){
-            month--;
-            if(month<1){
-                year--;
-                month=12;
+        this.day--;
+        if (this.day < 1) {
+            this.month--;
+            if (this.month < 1) {
+                this.month = 12;
+                this.year--;
             }
-            day=numberOfDaysInMonth();
+            this.day = this.numberOfDaysInMonth();
         }
     }
     public void stepBackward(int days){
-        int i=0;
-        while(i<days){
-            i++;
+        for (int i = 0; i < days; i++) {
             this.stepBackwardOneDay();
         }
     }
     public void stepForwardOneDay(){
-        day++;
-        if(day>numberOfDaysInMonth()){
-            day=day%numberOfDaysInMonth();
-            month++;
-            if(month>12){
-                month=month%12;
-                year++;
+        this.day++;
+        if (this.day > this.numberOfDaysInMonth()) {
+            this.day = this.day % this.numberOfDaysInMonth();
+            this.month++;
+            if (this.month > 12) {
+                this.month = this.month % 12;
+                this.year++;
             }
         }
     }
@@ -195,20 +162,21 @@ public class MyDate {
     }
 
     public boolean isBefore(MyDate other){
-        if(this.year<other.year){
+        if (this.year < other.year) {
             return true;
+        } else if (this.year > other.year) {
+            return false;
         }
-        else if (this.year==other.year) {
-            if(this.month<other.month){
-                return true;
-            }
-            else if(this.month==other.month){
-                if(this.day<other.day){
-                    return true;
-                }
-            }
+
+        // If years are equal, compare months
+        if (this.month < other.month) {
+            return true;
+        } else if (this.month > other.month) {
+            return false;
         }
-        return false;
+
+        // If months are also equal, compare days
+        return this.day < other.day;
     }
 
     public int yearsBetween(MyDate other){
@@ -250,26 +218,50 @@ public class MyDate {
         return new MyDate(this.month, this.day,this.year);
     }
 
-    public int daysBetween(MyDate other){
-        MyDate counterDate;
-        int i=0;
-        if(this.isBefore(other)){
-            counterDate = this.copy();
-            while(counterDate.isBefore(other)){
-                i++;
-                counterDate.stepForwardOneDay();
-            }
+    public int daysBetween(MyDate other) {
+        MyDate start;
+        MyDate end;
+
+        if (this.isBefore(other)) {
+            start = this.copy();
+            end = other;
+        } else {
+            start = other.copy();
+            end = this;
         }
-        else{
-            counterDate = other.copy();
-            while(counterDate.isBefore(other)){
-                i++;
-                counterDate.stepForwardOneDay();
-            }
+
+        int daysCount = 0;
+
+        // Increment the start date one day at a time until it matches the end date
+        while (!start.equals(end)) {
+            start.stepForwardOneDay();
+            daysCount++;
         }
-        return i;
+
+        return daysCount;
     }
 
+    public static MyDate today() {
+        Calendar now = GregorianCalendar.getInstance();
+        int day = now.get(Calendar.DAY_OF_MONTH);
+        int month = now.get(Calendar.MONTH) + 1; // Calendar.MONTH is zero-based
+        int year = now.get(Calendar.YEAR);
+
+        return new MyDate(month, day, year);
+    }
+
+    public int compareTo(MyDate other) {
+        if (this.year != other.year) {
+            return this.year - other.year; // Returns a positive or negative number depending on the difference in years
+        }
+
+        if (this.month != other.month) {
+            return this.month - other.month; // Same logic for months
+        }
+
+        return this.day - other.day; // Returns a positive or negative number for the day comparison
+
+    }
     public static MyDate now(){
         return new MyDate();
     }
