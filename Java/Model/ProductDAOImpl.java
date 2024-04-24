@@ -36,7 +36,7 @@ public class ProductDAOImpl implements ProductDAO
   @Override public Product creat(String name, double price, int quantity) throws SQLException
   {
     try(Connection connection = getConnection()){
-     PreparedStatement statement = connection.prepareStatement("insert into product (name, price, quantity) values (?, ?, ?)");
+     PreparedStatement statement = connection.prepareStatement("insert into wareHouse.products (name, price, quantity) values (?, ?, ?)");
 
      statement.setString(1, name);
      statement.setDouble(2, price);
@@ -50,7 +50,7 @@ public class ProductDAOImpl implements ProductDAO
       throws SQLException
   {
    try(Connection connection = getConnection()){
-     PreparedStatement statement = connection.prepareStatement("select * from product where name like ?");
+     PreparedStatement statement = connection.prepareStatement("select * from products where name like ?");
      statement.setString(1,"%"+searchString+"%");
      ResultSet resultSet = statement.executeQuery();
      ArrayList<Product> products = new ArrayList<>();
@@ -69,17 +69,18 @@ public class ProductDAOImpl implements ProductDAO
   private static Connection getConnection() throws SQLException
   {
     return DriverManager.getConnection(
-        "jdbc:postgresql://localhost:5432/products?currentSchema?jdbc",
+        "jdbc:postgresql://localhost:5432/postgres?currentSchema=WareHouse",
         "postgres", "1234");
   }
 
   @Override public void update(Product product) throws SQLException
   {
     try(Connection connection = getConnection()){
-      PreparedStatement statement = connection.prepareStatement("update product set name=?, price=?, quantity=? where id=?");
+      PreparedStatement statement = connection.prepareStatement("update products set name=?, price=?, quantity=? where name=?");
       statement.setString(1, product.getName());
       statement.setDouble(2, product.getPrice());
       statement.setInt(3, product.getQuantity());
+      statement.setString(4, product.getName());
       statement.executeUpdate();
     }
 
@@ -88,9 +89,10 @@ public class ProductDAOImpl implements ProductDAO
   @Override public void delete(Product product) throws SQLException
   {
     try(Connection connection = getConnection()){
-      PreparedStatement statement = connection.prepareStatement("delete from product where id=?");
+      PreparedStatement statement = connection.prepareStatement("delete from products where name like ?");
       statement.setString(1, product.getName());
       statement.executeUpdate();
     }
   }
+
 }
