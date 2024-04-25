@@ -1,5 +1,7 @@
 package Shared.Util;
 
+import jdk.jfr.Description;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -11,6 +13,7 @@ public class MyDate {
     public MyDate(int month, int day, int year){
         this.set(month, day, year);
     }
+
 
     public MyDate(){
         Calendar now = GregorianCalendar.getInstance();
@@ -162,21 +165,24 @@ public class MyDate {
     }
 
     public boolean isBefore(MyDate other){
-        if (this.year < other.year) {
-            return true;
-        } else if (this.year > other.year) {
-            return false;
-        }
+        if(other != null){
+            if (this.year < other.year) {
+                return true;
+            } else if (this.year > other.year) {
+                return false;
+            }
 
-        // If years are equal, compare months
-        if (this.month < other.month) {
-            return true;
-        } else if (this.month > other.month) {
-            return false;
-        }
+            // If years are equal, compare months
+            if (this.month < other.month) {
+                return true;
+            } else if (this.month > other.month) {
+                return false;
+            }
 
-        // If months are also equal, compare days
-        return this.day < other.day;
+            // If months are also equal, compare days
+            return this.day < other.day;
+        }
+        return false;
     }
 
     public int yearsBetween(MyDate other){

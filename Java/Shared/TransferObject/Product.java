@@ -95,7 +95,7 @@ public class Product implements Serializable, Stock {
     }
 
     public void setCategory(int category) {
-        if(category < 0){
+        if(category <= 0){
             throw new IllegalArgumentException("Category cannot be under 0");
         }
         this.category = category;
@@ -104,11 +104,11 @@ public class Product implements Serializable, Stock {
     public void setProductDescription(String productDescription) {
 
         if(productDescription.length()>255){
-            throw new RuntimeException("Description cannot be over 255 chars");
+            throw new IllegalArgumentException("Description cannot be over 255 chars");
         }
 
         //Define a regular expression with non special charters and underscore/dash
-        Pattern p = Pattern.compile("[^a-z0-9-_ ]", Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile("[^a-z0-9-_ ,.'!]", Pattern.CASE_INSENSITIVE);
         // Creating matcher for expression and our input string
         Matcher m = p.matcher(productDescription);
         if(m.find()){
@@ -119,15 +119,15 @@ public class Product implements Serializable, Stock {
     }
 
     public void setProductionDate(MyDate productionDate) {
-        if(expirationDate.isBefore(productionDate)){
-            throw new RuntimeException("Expiration date  is before production date");
+        if(expirationDate != null && expirationDate.isBefore(productionDate)){
+            throw new IllegalArgumentException("Expiration date  is before production date");
         }
         this.productionDate = productionDate;
 
     }
 
     public void setExpirationDate(MyDate expirationDate) {
-        if(expirationDate.isBefore(productionDate)){
+        if(expirationDate != null && expirationDate.isBefore(productionDate)){
             throw new RuntimeException("Expiration date is before production date");
         }
         this.expirationDate = expirationDate;
