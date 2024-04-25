@@ -76,13 +76,58 @@ public class Product implements Serializable, Stock {
         return unitType;
     }
 
+    public void setName(String name) {
+
+        String str = "^[a-zA-Z0-9-_ ]";
+
+        this.name = name;
+    }
+
+    public void setCategory(int category) {
+        this.category = category;
+    }
+
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
+    }
+
+    public void setProductionDate(MyDate productionDate) {
+        this.productionDate = productionDate;
+    }
+
+    public void setExpirationDate(MyDate expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public void setBarcode(int barcode) {
+        this.barcode = barcode;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setUnitType(String unitType) {
+        this.unitType = unitType;
+    }
+
     @Override
     public double getTotalValue() {
-        return price* quantity;
+        if(price < 0 || quantity < 0){
+            throw new IllegalArgumentException("Price or Quantity are under 0");
+        }
+        return price * quantity;
     }
 
     @Override
     public void buyQuantity(int quantity) {
+        if(quantity < 0){
+            throw new IllegalArgumentException("Quantity are a invalid value");
+        }
 
     }
 
@@ -93,7 +138,9 @@ public class Product implements Serializable, Stock {
                 return c;
             }
         }
-        return null; //Skal der returnes null her eller skal metoden skrives om?
+        return null;
+        //Skal der returnes null her eller skal metoden skrives om?
+        //Det er fint at metoden returnerer null - TB
     }
 
     @Override

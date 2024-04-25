@@ -4,9 +4,10 @@ import java.io.Serializable;
 
 public class Request implements Serializable {
     private String type;
-    private Product arg;
+    //This class should use Object as type for arg for scalability
+    private Object arg;
 
-    public Request(String type, Product arg) {
+    public Request(String type, Object arg) {
         this.type = type;
         this.arg = arg;
     }
