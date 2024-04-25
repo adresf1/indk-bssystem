@@ -6,6 +6,8 @@ import Shared.Util.Stock;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class Product implements Serializable, Stock {
@@ -78,9 +80,19 @@ public class Product implements Serializable, Stock {
 
     public void setName(String name) {
 
-        String str = "^[a-zA-Z0-9-_ ]";
+        //Define a regular expression with non special charters and underscore/dash
+        Pattern p = Pattern.compile("[^a-z0-9-_ ]", Pattern.CASE_INSENSITIVE);
 
+        // Creating matcher for expression and our input string
+        Matcher m = p.matcher(name);
+
+
+        if(m.find()){
+            throw new IllegalArgumentException("String contains special characters");
+        }
+        //if no special charters
         this.name = name;
+        System.out.println("Name was saved: " + name);
     }
 
     public void setCategory(int category) {

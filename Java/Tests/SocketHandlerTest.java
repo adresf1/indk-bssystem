@@ -1,21 +1,14 @@
 package Tests;
 
-import Server.model.BuyingManager;
-import Server.model.BuyingManagerImpl;
-import Server.networking.ConnectionPool;
 import Server.networking.SocketHandler;
-import Shared.TransferObject.Product;
+import Shared.TransferObject.Product_Legacy;
 import Shared.TransferObject.Request;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.io.ByteArrayOutputStream;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class SocketHandlerTest {
 
@@ -36,7 +29,7 @@ public class SocketHandlerTest {
     @Test
     public void testBuyProduct_InvalidInput() throws IOException {
         // Create a request with a product to be bought
-        Product product = new Product("Beans", 10.0,1);
+        Product_Legacy product = new Product_Legacy("Beans", 10.0,1);
         Request request = new Request("BuyProduct", null);
 
         // Call the method under test
@@ -54,7 +47,7 @@ public class SocketHandlerTest {
     @Test
     public void testBuyProduct_ValidInput() throws IOException {
         // Create a request with a product to be bought
-        Product product = new Product("Beans", 10.0,1);
+        Product_Legacy product = new Product_Legacy("Beans", 10.0,1);
         Request request = new Request("BuyProduct", product);
 
         // Call the method under test
