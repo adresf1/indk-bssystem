@@ -6,6 +6,7 @@ public interface Stock {
     public double getTotalValue();
 
     public void buyQuantity(int quantity);
+    public void returnQuantity(int quantity);
 
     public Certification getCertificate(String id);
 

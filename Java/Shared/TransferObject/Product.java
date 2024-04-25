@@ -20,6 +20,8 @@ public class Product implements Serializable, Stock {
     private int barcode;
     private double price;
     private int quantity;
+
+    private double lowStock;
     private String unitType;
     private ArrayList<Certification> certificates;
 
@@ -82,32 +84,52 @@ public class Product implements Serializable, Stock {
 
         //Define a regular expression with non special charters and underscore/dash
         Pattern p = Pattern.compile("[^a-z0-9-_ ]", Pattern.CASE_INSENSITIVE);
-
         // Creating matcher for expression and our input string
         Matcher m = p.matcher(name);
-
-
         if(m.find()){
             throw new IllegalArgumentException("String contains special characters");
         }
+
         //if no special charters
         this.name = name;
-        System.out.println("Name was saved: " + name);
     }
 
     public void setCategory(int category) {
+        if(category < 0){
+            throw new IllegalArgumentException("Category cannot be under 0");
+        }
         this.category = category;
     }
 
     public void setProductDescription(String productDescription) {
+
+        if(productDescription.length()>255){
+            throw new RuntimeException("Description cannot be over 255 chars");
+        }
+
+        //Define a regular expression with non special charters and underscore/dash
+        Pattern p = Pattern.compile("[^a-z0-9-_ ]", Pattern.CASE_INSENSITIVE);
+        // Creating matcher for expression and our input string
+        Matcher m = p.matcher(productDescription);
+        if(m.find()){
+            throw new IllegalArgumentException("String contains special characters");
+        }
+
         this.productDescription = productDescription;
     }
 
     public void setProductionDate(MyDate productionDate) {
+        if(expirationDate.isBefore(productionDate)){
+            throw new RuntimeException("Expiration date  is before production date");
+        }
         this.productionDate = productionDate;
+
     }
 
     public void setExpirationDate(MyDate expirationDate) {
+        if(expirationDate.isBefore(productionDate)){
+            throw new RuntimeException("Expiration date is before production date");
+        }
         this.expirationDate = expirationDate;
     }
 
@@ -116,11 +138,25 @@ public class Product implements Serializable, Stock {
     }
 
     public void setPrice(double price) {
+        if(price < 0){
+            throw new RuntimeException("Price cannot be under 0.00");
+        }
         this.price = price;
     }
 
     public void setQuantity(int quantity) {
+        if(quantity < 0){
+            throw new RuntimeException("Quantity cannot be under 0");
+        }
         this.quantity = quantity;
+    }
+
+    public void setLowStock(int lowStock) {
+        if(lowStock < 0 ){
+            throw new RuntimeException("lowStock cannot be under 0");
+        }
+
+        this.lowStock = lowStock;
     }
 
     public void setUnitType(String unitType) {
@@ -140,11 +176,27 @@ public class Product implements Serializable, Stock {
         if(quantity < 0){
             throw new IllegalArgumentException("Quantity are a invalid value");
         }
-
+        this.quantity -= quantity;
+    }
+    @Override
+    public void returnQuantity(int quantity){
+        if(quantity < 0){
+            throw new IllegalArgumentException("Quantity are a invalid value");
+        }
+        this.quantity += quantity;
     }
 
     @Override
     public Certification getCertificate(String id) {
+
+        //Define a regular expression with non special charters
+        Pattern p = Pattern.compile("[^a-z0-9-_ ]", Pattern.CASE_INSENSITIVE);
+        // Creating matcher for expression and our input string
+        Matcher m = p.matcher(id);
+        if(m.find()){
+            throw new IllegalArgumentException("String contains special characters");
+        }
+
         for (Certification c : certificates) {
             if (c.getID().equals(id)) {
                 return c;
@@ -157,17 +209,37 @@ public class Product implements Serializable, Stock {
 
     @Override
     public ArrayList<Certification> getCertificationByCountry(String country) {
+
+        //Define a regular expression with non special charters
+        Pattern p = Pattern.compile("[^a-z0-9]", Pattern.CASE_INSENSITIVE);
+        // Creating matcher for expression and our input string
+        Matcher m = p.matcher(country);
+        if(m.find()){
+            throw new IllegalArgumentException("String contains special characters");
+        }
+
         ArrayList<Certification> cc = new ArrayList<>();
+
         for (Certification cert : certificates) {
             if (cert.getCountry().equalsIgnoreCase(country)) {
                 cc.add(cert);
             }
         }
+
         return cc;
     }
 
     @Override
     public ArrayList<Certification> getCertificationByOrganization(String organization) {
+
+        //Define a regular expression with non special charters and underscore/dash
+        Pattern p = Pattern.compile("[^a-z0-9-_ ]", Pattern.CASE_INSENSITIVE);
+        // Creating matcher for expression and our input string
+        Matcher m = p.matcher(organization);
+        if(m.find()){
+            throw new IllegalArgumentException("String contains special characters");
+        }
+
         ArrayList<Certification> co = new ArrayList<>();
         for (Certification cert : certificates) {
             if (cert.getOrganization().equalsIgnoreCase(organization)) {
@@ -179,11 +251,19 @@ public class Product implements Serializable, Stock {
 
     @Override
     public void addCertification(Certification c) {
+
+        //Todo: Certification class should override equals method
+        if(certificates.contains(c)){
+            throw new IllegalArgumentException("Certification already exist");
+        }
+
         certificates.add(c);
     }
 
     @Override
     public void editCertification(Certification c) {
+
+        //Todo: method could be shortened with an equal method on the Certification class
         for (int i = 0; i < certificates.size(); i++) {
             if (certificates.get(i).getID().equals(c.getID())) {
                 certificates.set(i, c);
@@ -196,6 +276,7 @@ public class Product implements Serializable, Stock {
     @Override
     public boolean isExpired() {
         MyDate today = MyDate.today();
+        //Todo: Test this i don't think this is correct - use isbefore()
         return expirationDate.compareTo(today) < 0;
     }
 
@@ -206,10 +287,8 @@ public class Product implements Serializable, Stock {
     }
 
     @Override
-    public boolean isStockLow() {
-        int lowStockThreshold = 2;
-        return quantity < lowStockThreshold;
-
+    public boolean isStockLow() {;
+        return quantity < lowStock;
     }
 
     @Override
