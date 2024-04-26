@@ -61,3 +61,5 @@ public class SocketHandlerTest {
         assert(responseString.contains("Beans")); // Assuming you are sending null as the data part of the response
     }
 }
+
+
