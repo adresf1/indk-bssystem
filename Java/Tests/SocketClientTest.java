@@ -70,6 +70,8 @@ class SocketClientTest {
         assertEquals(1,socketClient.getBoughtProducts().size());
     }
 
+    //TODO: OMskriv test til at bruge product frem for product_legacy
+
     @Test
     public void testMoveToBasket_manyValidInput() {
         Product_Legacy product = new Product_Legacy("Beans", 10.0,1);
