@@ -13,13 +13,15 @@ import java.util.regex.Pattern;
 public class Product implements Serializable, Stock {
 
     private String name;
+
+    private String ID;
     private int category;
     private String productDescription;
     private MyDate productionDate, expirationDate;
 
     private int barcode;
     private double price;
-    private int quantity;
+    private double quantity;
 
     private double lowStock;
     private String unitType;
@@ -30,9 +32,10 @@ public class Product implements Serializable, Stock {
         certificates = new ArrayList<Certification>();
     }
 
-    public Product(String name, int category, String productDescription, MyDate productionDate, MyDate expirationDate,
-                   int barcode, double price, int quantity, String unitType) {
+    public Product(String name, String ID, int category, String productDescription, MyDate productionDate, MyDate expirationDate,
+                   int barcode, double price, double quantity, double lowStock, String unitType) {
         this.name = name;
+        this.ID = ID;
         this.category = category;
         this.productDescription = productDescription;
         this.productionDate = productionDate;
@@ -40,6 +43,7 @@ public class Product implements Serializable, Stock {
         this.barcode = barcode;
         this.price = price;
         this.quantity = quantity;
+        this.lowStock = lowStock;
         this.unitType = unitType;
         this.certificates = new ArrayList<>();
     }
@@ -47,6 +51,15 @@ public class Product implements Serializable, Stock {
     public String getName() {
         return name;
     }
+
+    public String getID() {
+        return ID;
+    }
+
+    public double getLowStock() {
+        return lowStock;
+    }
+
 
     public int getCategory() {
         return category;
@@ -72,7 +85,7 @@ public class Product implements Serializable, Stock {
         return price;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 
@@ -93,6 +106,11 @@ public class Product implements Serializable, Stock {
         //if no special charters
         this.name = name;
     }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
 
     public void setCategory(int category) {
         if(category <= 0){
