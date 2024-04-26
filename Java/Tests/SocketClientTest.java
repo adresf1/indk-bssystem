@@ -1,16 +1,14 @@
 package Tests;
 
 import Network.SocketClient;
-import Server.networking.SocketHandler;
-import Shared.TransferObject.Product;
+import Shared.TransferObject.Product_Legacy;
 import Shared.TransferObject.Request;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.security.PrivateKey;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SocketClientTest {
     private SocketClient socketClient;
@@ -42,7 +40,7 @@ class SocketClientTest {
 
     @Test
     public void testMoveToBasket_invalidInput() {
-        Product product = new Product("Beans", 10.0,1);
+        Product_Legacy product = new Product_Legacy("Beans", 10.0,1);
         Request request = new Request("BuyProduct", null);
 
     try {
@@ -58,7 +56,7 @@ class SocketClientTest {
 
     @Test
     public void testMoveToBasket_validInput() {
-        Product product = new Product("Beans", 10.0,1);
+        Product_Legacy product = new Product_Legacy("Beans", 10.0,1);
         Request request = new Request("BuyProduct", product);
 
         try {
@@ -72,9 +70,11 @@ class SocketClientTest {
         assertEquals(1,socketClient.getBoughtProducts().size());
     }
 
+    //TODO: OMskriv test til at bruge product frem for product_legacy
+
     @Test
     public void testMoveToBasket_manyValidInput() {
-        Product product = new Product("Beans", 10.0,1);
+        Product_Legacy product = new Product_Legacy("Beans", 10.0,1);
         Request request = new Request("BuyProduct", product);
         Request request1 = new Request("BuyProduct", product);
         Request request2 = new Request("BuyProduct", product);
@@ -96,3 +96,4 @@ class SocketClientTest {
     void testGetBoughtProducts() {
     }
 }
+
