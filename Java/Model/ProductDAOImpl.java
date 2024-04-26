@@ -78,7 +78,7 @@ public class ProductDAOImpl implements ProductDAO
        double lowStock = resultSet.getDouble("lowStock");
        String unitType = resultSet.getString("unitType");
 
-       Product product = new Product(name, ID, category, productDescription, productionDate, expirationDate, barcode, price, quantity, lowStock, unitType);
+       Product product = new Product(name, ID, category, productDescription, MyDate.fromString(productionDate), MyDate.fromString(expirationDate), barcode, price, quantity, lowStock, unitType);
        products.add(product);
      }
      return products;
@@ -98,7 +98,7 @@ public class ProductDAOImpl implements ProductDAO
       PreparedStatement statement = connection.prepareStatement("update products set name=?, price=?, quantity=? where name=?");
       statement.setString(1, product.getName());
       statement.setDouble(2, product.getPrice());
-      statement.setInt(3, product.getQuantity());
+      statement.setDouble(3, product.getQuantity());
       statement.setString(4, product.getName());
       statement.executeUpdate();
     }

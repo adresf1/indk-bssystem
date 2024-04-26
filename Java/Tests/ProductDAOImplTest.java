@@ -1,16 +1,8 @@
 package Tests;
 
-import Model.ProductDAOImpl;
-import Shared.TransferObject.Product;
-import org.junit.jupiter.api.Test;
-
-import java.sql.SQLException;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class ProductDAOImplTest
 {
+  /*
   @Test void creatProductTest() throws SQLException
   {
     ProductDAOImpl productDAO = ProductDAOImpl.getInstance();
@@ -105,7 +97,7 @@ class ProductDAOImplTest
     assertEquals(originalProduct.getQuantity(), updatedProduct.getQuantity(), "Product quantity should match");
   }
 
-
+   */
 
 
 

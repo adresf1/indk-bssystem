@@ -116,7 +116,20 @@ public class ProductTest {
 
     }
 
+    @Test
+    public void test_MyDate_Class() {
+        MyDate dateAssert1 = MyDate.fromString("1/1/2001");
+        MyDate dateAssert2 = MyDate.fromString("01/01/2001");
+        MyDate dateAssert3 = MyDate.fromString("1/1/900");
 
+        System.out.println("Value: " + Integer.parseInt("01"));
+
+        assertEquals("01/01/2001",dateAssert1.toString());
+
+        assertEquals("01/01/0900",dateAssert3.toString());
+
+        assertEquals("01/01/2001",dateAssert2.toString());
+    }
     /*
 
     //TODO: finish testcases for the following methods

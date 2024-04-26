@@ -1,7 +1,6 @@
 package Shared.Util;
 
-import jdk.jfr.Description;
-
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -64,6 +63,25 @@ public class MyDate {
         // Year as four digits
         result += String.format("%04d", this.year);
         return result;
+    }
+    public static MyDate fromString(String date){
+        MyDate convertedDate = new MyDate();
+
+        if(date.length()<=10){
+            String[] strArr = date.split("/");
+            if (strArr.length !=3 ){
+               throw new IllegalArgumentException("Wrong format for date, correct format for date is DD/MM/YYYY");
+            }
+            System.out.println("strArr: " + Arrays.toString(strArr));
+            convertedDate.set(
+                    Integer.parseInt(strArr[0]),
+                    Integer.parseInt(strArr[1]),
+                    Integer.parseInt(strArr[2])
+            );
+            return convertedDate;
+        }
+
+        return convertedDate;
     }
 
     public String getMonthName(){
