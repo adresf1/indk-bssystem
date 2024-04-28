@@ -6,6 +6,51 @@ public class BatchNumber implements Certification{
     public String id, database, description;
     public String originCountry, orginization;
 
+
+    public BatchNumber(String id, String database, String description, String originCountry, String organization) {
+        this.id = id;
+        this.database = database;
+        this.description = description;
+        this.originCountry = originCountry;
+        this.orginization = organization;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getOriginCountry() {
+        return originCountry;
+    }
+
+    public void setOriginCountry(String originCountry) {
+        this.originCountry = originCountry;
+    }
+
+    public String getOrginization() {
+        return orginization;
+    }
+
+    public void setOrginization(String orginization) {
+        this.orginization = orginization;
+    }
+
     @Override
     public Certification getCertificate() {
         return this;

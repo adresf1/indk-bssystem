@@ -1,4 +1,4 @@
-package Model;
+package ModelDB;
 
 import Shared.TransferObject.Product;
 import Shared.Util.MyDate;
@@ -38,8 +38,8 @@ public class ProductDAOImpl implements ProductDAO
   public Product creat(String name, String ID, int category, String productDescription, MyDate productionDate, MyDate expirationDate,
                                  int barcode, double price, double quantity, double lowStock, String unitType) throws SQLException
   {
-    try(Connection connection = getConnection()){
-     PreparedStatement statement = connection.prepareStatement("insert into " + warehouseDB + ".products(name, ID, category, productDescription, productionDate, expirationDate, barcode, price, quantity, lowStock, unitType ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    try(Connection connection = getConnection(warehouseDB)){
+     PreparedStatement statement = connection.prepareStatement("INSERT INTO " + warehouseDB + ".products(name, ID, category, productDescription, productionDate, expirationDate, barcode, price, quantity, lowStock, unitType ) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
      statement.setString(1, name);
      statement.setString(2,ID);
@@ -60,8 +60,8 @@ public class ProductDAOImpl implements ProductDAO
   @Override public List<Product> readByName(String searchString)
       throws SQLException
   {
-   try(Connection connection = getConnection()){
-     PreparedStatement statement = connection.prepareStatement("select * from products where name like ?");
+   try(Connection connection = getConnection(warehouseDB)){
+     PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE name LIKE ?");
      statement.setString(1,"%"+searchString+"%");
      ResultSet resultSet = statement.executeQuery();
      ArrayList<Product> products = new ArrayList<>();
@@ -85,21 +85,29 @@ public class ProductDAOImpl implements ProductDAO
    }
   }
 
-  private static Connection getConnection() throws SQLException
+  private static Connection getConnection(String database) throws SQLException
   {
+    String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=" + database;
     return DriverManager.getConnection(
-        "jdbc:postgresql://localhost:5432/postgres?currentSchema=WareHouse",
+        url,
         "postgres", "KarlDen12.");
   }
 
   @Override public void update(Product product) throws SQLException
   {
-    try(Connection connection = getConnection()){
-      PreparedStatement statement = connection.prepareStatement("update products set name=?, price=?, quantity=? where name=?");
+    try(Connection connection = getConnection(warehouseDB)){
+      PreparedStatement statement = connection.prepareStatement("UPDATE products SET name=?, ID=?, category=?, productDescription=?, productionDate=?, expirationDate=?, barcode=?, price=?, quantity=?, lowStock=?, unitType=? where ID=?");
       statement.setString(1, product.getName());
-      statement.setDouble(2, product.getPrice());
-      statement.setDouble(3, product.getQuantity());
-      statement.setString(4, product.getName());
+      statement.setString(2,product.getID());
+      statement.setInt(3,product.getCategory());
+      statement.setString(4,product.getProductDescription());
+      statement.setString(5,product.getProductionDate().toString());
+      statement.setString(6,product.getExpirationDate().toString());
+      statement.setInt(7,product.getBarcode());
+      statement.setDouble(8, product.getPrice());
+      statement.setDouble(9, product.getQuantity());
+      statement.setDouble(10, product.getLowStock());
+      statement.setString(11, product.getUnitType());
       statement.executeUpdate();
     }
 
@@ -107,9 +115,9 @@ public class ProductDAOImpl implements ProductDAO
 
   @Override public void delete(Product product) throws SQLException
   {
-    try(Connection connection = getConnection()){
-      PreparedStatement statement = connection.prepareStatement("delete from products where name like ?");
-      statement.setString(1, product.getName());
+    try(Connection connection = getConnection(warehouseDB)){
+      PreparedStatement statement = connection.prepareStatement("DELETE FROM products WHERE ID LIKE ?");
+      statement.setString(1, product.getID());
       statement.executeUpdate();
     }
   }
