@@ -31,7 +31,7 @@ CREATE TABLE products(
         products_unitType unitType
 );
 
-DROP TABLE products;
+--DROP TABLE products;
 
 CREATE TABLE organic(
     organic_ID ID primary key NOT NULL,
