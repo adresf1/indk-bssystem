@@ -26,7 +26,7 @@ public class ShoppingCart implements PropertyChangeListener {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if ("AddedProduct".equals(evt.getPropertyName())) {
+    if ("ProductAdded".equals(evt.getPropertyName())) {
       Product product = (Product) evt.getNewValue();
       System.out.println("Product added to shopping cart: " + product.getName());
     }

@@ -49,7 +49,7 @@ public class SocketClient implements Client, Subject
 
             while(true){
                 Request request = (Request) this.inFromServer.readObject();
-                if ("ProductBought".equals(request.getType())){
+                if ("ProductReserved".equals(request.getType())){
                     Product reservedProduct = (Product) request.getArg();
                     shoppingcart.add(reservedProduct); // Add to cart
 
