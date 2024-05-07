@@ -1,6 +1,5 @@
 package Server.networking;
-
-import Server.model.BuyingManager;
+import Server.model.ReserveManager;
 import Shared.TransferObject.Product;
 import Shared.TransferObject.Request;
 
@@ -14,16 +13,16 @@ import java.net.Socket;
 public class SocketHandler implements Runnable{
     private Socket socket;
 
-    private BuyingManager buyingManager;
+    private ReserveManager reserveManager;
     private ObjectOutputStream outToClient;
 
     private ObjectInputStream inFromClient;
 
     private ConnectionPool connectionPool;
 
-    public SocketHandler(Socket socket, BuyingManager buyingManager, ConnectionPool connectionPool) {
+    public SocketHandler(Socket socket, ReserveManager reserveManager, ConnectionPool connectionPool) {
         this.socket = socket;
-        this.buyingManager = buyingManager;
+        this.reserveManager = reserveManager;
         this.connectionPool = connectionPool;
 
 
@@ -46,11 +45,13 @@ public class SocketHandler implements Runnable{
             try {
                 Request request = (Request) inFromClient.readObject();
 
-                if ("BuyProduct".equals(request.getType())) {
-                    System.out.println("Message Received of type: BuyProduct");
-                    buyProduct(request);
-                }
-                else {
+                if ("ReserveProduct".equals(request.getType())) {
+                    Product requestedProduct = (Product) request.getArg();
+                    Product reservedProduct = reserveManager.reserveProduct(requestedProduct);
+                    if (reservedProduct != null) {
+                        outToClient.writeObject(new Request("ProductReserved", reservedProduct));
+                    }
+                } else {
                     System.out.println("Request Type not recognized: " + request.getType());
                 }
             } catch (RuntimeException|IOException|ClassNotFoundException e){
@@ -59,9 +60,9 @@ public class SocketHandler implements Runnable{
         }
     }
 
-    public void buyProduct(Request request) throws IOException {
-        Product productToBuy = (Product) request.getArg();
-        outToClient.writeObject(new Request("ProductBought", productToBuy));
-        System.out.println("SocketHandler speaking: buyProduct");
+    public void reserveProduct(Request request) throws IOException {
+        Product productToReserve = (Product) request.getArg();
+        outToClient.writeObject(new Request("ProductReserved", productToReserve));
+        System.out.println("SocketHandler speaking: reserveProduct");
     }
 }

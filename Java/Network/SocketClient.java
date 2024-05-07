@@ -25,9 +25,6 @@ public class SocketClient implements Client, Subject
 
     public SocketClient() {
 
-        support = new PropertyChangeSupport(this);
-        shoppingcart = new ArrayList<>();
-
         try {
             Socket socket = new Socket("localHost", 2910);
             outToServer = new ObjectOutputStream(socket.getOutputStream());
@@ -42,7 +39,8 @@ public class SocketClient implements Client, Subject
 
     public SocketClient(ObjectOutputStream outToServer) {
         this.outToServer = outToServer;
-        shoppingcart = new ArrayList<>();
+        this.shoppingcart = new ArrayList<>();
+        support = new PropertyChangeSupport(this);
     }
 
     private void listenToServer(ObjectOutputStream outToServer, ObjectInputStream inFromServer) {
@@ -52,9 +50,11 @@ public class SocketClient implements Client, Subject
             while(true){
                 Request request = (Request) this.inFromServer.readObject();
                 if ("ProductBought".equals(request.getType())){
+                    Product reservedProduct = (Product) request.getArg();
+                    shoppingcart.add(reservedProduct); // Add to cart
+
+                    support.firePropertyChange("ProductAdded", null, reservedProduct); // Notify listeners
                     System.out.println("Confirmation received from server");
-                    moveToBasket(request);
-                    System.out.println(shoppingcart);
                 }
                 else {
                     System.out.println("Request type not recognized ");
@@ -85,10 +85,10 @@ public class SocketClient implements Client, Subject
     }
 
     @Override
-    public void buyProduct(Product product) {
+    public void reserveProduct(Product product) {
         try {
-            Request buyRequest = new Request("BuyProduct", product);
-            outToServer.writeObject(buyRequest);
+            Request reserveRequest = new Request("ReserveProduct", product);
+            outToServer.writeObject(reserveRequest);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -96,13 +96,15 @@ public class SocketClient implements Client, Subject
 
     public void moveToBasket(Request request) {
         if (request.getArg() instanceof Product) {
-            shoppingcart.add((Product) request.getArg());
+            Product product = (Product) request.getArg();
+            shoppingcart.add(product);
+            support.firePropertyChange("AddedProduct", null, product); //
         } else {
             throw new RuntimeException("request.getArg returned null with expected type being product");
         }
     }
     @Override
-    public ArrayList<Product> getBoughtProducts () {
+    public ArrayList<Product> getReservedProducts () {
         return shoppingcart;
     }
 

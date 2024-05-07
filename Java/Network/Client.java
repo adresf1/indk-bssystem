@@ -7,9 +7,9 @@ import java.util.ArrayList;
 public interface Client {
     ArrayList<Product> getProduct();
 
-    void buyProduct(Product product);
+    void reserveProduct(Product product);
 
-    ArrayList<Product> getBoughtProducts();
+    ArrayList<Product> getReservedProducts();
     void startClient();
 
 }

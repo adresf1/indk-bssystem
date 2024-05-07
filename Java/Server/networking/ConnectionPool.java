@@ -18,7 +18,7 @@ public class ConnectionPool {
     public void broadcast(Request request, SocketHandler serverConnectionIgnore) throws IOException {
         for (SocketHandler connection: serverConnections){
             if (connection != serverConnectionIgnore){
-                connection.buyProduct(request);
+                connection.reserveProduct(request);
             }
         }
     }

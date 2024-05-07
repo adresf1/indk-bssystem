@@ -35,13 +35,9 @@ class SocketClientTest {
     }
 
     @Test
-    void testBuyProduct() {
-    }
-
-    @Test
     public void testMoveToBasket_invalidInput() {
         Product_Legacy product = new Product_Legacy("Beans", 10.0,1);
-        Request request = new Request("BuyProduct", null);
+        Request request = new Request("ReserveProduct", null);
 
     try {
     socketClient.moveToBasket(request);
@@ -51,13 +47,13 @@ class SocketClientTest {
 
         String responseString = new String(outputStream.toByteArray());
         System.out.println("Response: " + responseString);
-        assertEquals(0,socketClient.getBoughtProducts().size());
+        assertEquals(0,socketClient.getReservedProducts().size());
     }
 
     @Test
     public void testMoveToBasket_validInput() {
         Product_Legacy product = new Product_Legacy("Beans", 10.0,1);
-        Request request = new Request("BuyProduct", product);
+        Request request = new Request("ReserveProduct", product);
 
         try {
             socketClient.moveToBasket(request);
@@ -67,7 +63,7 @@ class SocketClientTest {
 
         String responseString = new String(outputStream.toByteArray());
         System.out.println("Response: " + responseString);
-        assertEquals(1,socketClient.getBoughtProducts().size());
+        assertEquals(1,socketClient.getReservedProducts().size());
     }
 
     //TODO: OMskriv test til at bruge product frem for product_legacy
@@ -89,7 +85,7 @@ class SocketClientTest {
 
         String responseString = new String(outputStream.toByteArray());
         System.out.println("Response: " + responseString);
-        assertEquals(3,socketClient.getBoughtProducts().size());
+        assertEquals(3,socketClient.getReservedProducts().size());
     }
 
     @Test
