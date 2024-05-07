@@ -2,7 +2,9 @@ package Network;
 
 import Shared.TransferObject.Product;
 import Shared.TransferObject.Request;
+import Shared.Util.Subject;
 
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,18 +14,19 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class SocketClient implements Client {
+public class SocketClient implements Client, Subject
+{
     private PropertyChangeSupport support;
     private ObjectOutputStream outToServer;
 
     private ObjectInputStream inFromServer;
 
-    private ArrayList<Product> boughtProducts;
+    private ArrayList<Product> shoppingcart;
 
     public SocketClient() {
 
         support = new PropertyChangeSupport(this);
-        boughtProducts = new ArrayList<>();
+        shoppingcart = new ArrayList<>();
 
         try {
             Socket socket = new Socket("localHost", 2910);
@@ -39,7 +42,7 @@ public class SocketClient implements Client {
 
     public SocketClient(ObjectOutputStream outToServer) {
         this.outToServer = outToServer;
-        boughtProducts = new ArrayList<>();
+        shoppingcart = new ArrayList<>();
     }
 
     private void listenToServer(ObjectOutputStream outToServer, ObjectInputStream inFromServer) {
@@ -51,7 +54,7 @@ public class SocketClient implements Client {
                 if ("ProductBought".equals(request.getType())){
                     System.out.println("Confirmation received from server");
                     moveToBasket(request);
-                    System.out.println(boughtProducts);
+                    System.out.println(shoppingcart);
                 }
                 else {
                     System.out.println("Request type not recognized ");
@@ -93,13 +96,26 @@ public class SocketClient implements Client {
 
     public void moveToBasket(Request request) {
         if (request.getArg() instanceof Product) {
-            boughtProducts.add((Product) request.getArg());
+            shoppingcart.add((Product) request.getArg());
         } else {
             throw new RuntimeException("request.getArg returned null with expected type being product");
         }
     }
     @Override
     public ArrayList<Product> getBoughtProducts () {
-        return boughtProducts;
+        return shoppingcart;
+    }
+
+    @Override public void addListener(String eventName,
+        PropertyChangeListener listener)
+    {
+        support.addPropertyChangeListener(eventName, listener);
+    }
+
+    @Override public void removeListener(String eventName,
+        PropertyChangeListener listener)
+    {
+        support.removePropertyChangeListener(eventName, listener);
+
     }
 }
