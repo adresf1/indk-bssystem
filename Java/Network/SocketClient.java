@@ -49,7 +49,7 @@ public class SocketClient implements Client, Subject
 
             while(true){
                 Request request = (Request) this.inFromServer.readObject();
-                if ("ProductReserved".equals(request.getType())){
+                if ("ProductAdded".equals(request.getType())){
                     Product reservedProduct = (Product) request.getArg();
                     shoppingcart.add(reservedProduct); // Add to cart
 
@@ -87,7 +87,7 @@ public class SocketClient implements Client, Subject
     @Override
     public void reserveProduct(Product product) {
         try {
-            Request reserveRequest = new Request("ReserveProduct", product);
+            Request reserveRequest = new Request("ProductAdded", product);
             outToServer.writeObject(reserveRequest);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -98,7 +98,7 @@ public class SocketClient implements Client, Subject
         if (request.getArg() instanceof Product) {
             Product product = (Product) request.getArg();
             shoppingcart.add(product);
-            support.firePropertyChange("AddedProduct", null, product); //
+            support.firePropertyChange("ProductAdded", null, product); //
         } else {
             throw new RuntimeException("request.getArg returned null with expected type being product");
         }

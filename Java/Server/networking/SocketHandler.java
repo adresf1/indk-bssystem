@@ -45,11 +45,11 @@ public class SocketHandler implements Runnable{
             try {
                 Request request = (Request) inFromClient.readObject();
 
-                if ("ReserveProduct".equals(request.getType())) {
+                if ("ProductAdded".equals(request.getType())) {
                     Product requestedProduct = (Product) request.getArg();
                     Product reservedProduct = reserveManager.reserveProduct(requestedProduct);
                     if (reservedProduct != null) {
-                        outToClient.writeObject(new Request("ProductReserved", reservedProduct));
+                        outToClient.writeObject(new Request("ProductAdded", reservedProduct));
                     }
                 } else {
                     System.out.println("Request Type not recognized: " + request.getType());
@@ -62,7 +62,7 @@ public class SocketHandler implements Runnable{
 
     public void reserveProduct(Request request) throws IOException {
         Product productToReserve = (Product) request.getArg();
-        outToClient.writeObject(new Request("ProductReserved", productToReserve));
+        outToClient.writeObject(new Request("ProductAdded", productToReserve));
         System.out.println("SocketHandler speaking: reserveProduct");
     }
 }
