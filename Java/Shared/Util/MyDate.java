@@ -72,7 +72,7 @@ public class MyDate {
             if (strArr.length !=3 ){
                throw new IllegalArgumentException("Wrong format for date, correct format for date is DD/MM/YYYY");
             }
-            System.out.println("strArr: " + Arrays.toString(strArr));
+            //System.out.println("strArr: " + Arrays.toString(strArr));
             convertedDate.set(
                     Integer.parseInt(strArr[0]),
                     Integer.parseInt(strArr[1]),
