@@ -1,10 +1,11 @@
 package Shared.Util;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class MyDate {
+public class MyDate implements Serializable {
     int month;
     int day;
     int year;

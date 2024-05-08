@@ -23,6 +23,7 @@ public class ShoppingCart implements PropertyChangeListener {
   }
 
   private void addProduct(Product product) {
+
     support.firePropertyChange("ProductAdded", null, product);
   }
 
@@ -49,5 +50,9 @@ public class ShoppingCart implements PropertyChangeListener {
       System.out.println("Product removed from shopping cart: " + product.getName());
       removeProduct(product);
     }
+  }
+
+  public void addListener(String reservedProduct, PropertyChangeListener listener) {
+    support.addPropertyChangeListener(reservedProduct, listener);
   }
 }
