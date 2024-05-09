@@ -4,10 +4,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Organic implements Certification{
-    public String id, database, description;
-    public MyDate certificationDate, expirationDate; //CertificationDate er startdatoen
+    private String id, database, description;
+    private MyDate certificationDate, expirationDate; //CertificationDate er startdatoen
 
-    public String originCountry, orginization;
+    private String originCountry, orginization;
+
+    private String foreignKey;
 
     public Organic(String id, String database, String description,
         MyDate certificationDate, MyDate expirationDate, String originCountry,
@@ -50,6 +52,19 @@ public class Organic implements Certification{
         return orginization;
     }
 
+    public String getForeignKey()
+    {
+        return foreignKey;
+    }
+
+    public void setForeignKey(String foreignKey)
+    {
+        this.foreignKey = foreignKey;
+    }
+    public void setID(String id)
+    {
+        this.id = id;
+    }
     public void setDatabase(String database) {
         this.database = database;
     }
