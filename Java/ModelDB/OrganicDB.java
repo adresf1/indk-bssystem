@@ -1,12 +1,10 @@
 package ModelDB;
 
-import Shared.TransferObject.Product;
 import Shared.Util.MyDate;
 import Shared.Util.Organic;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class OrganicDB {
 
@@ -42,7 +40,18 @@ public class OrganicDB {
                          MyDate certificationDate, MyDate expirationDate, String originCountry,
                          String organization, String foreignKey) throws SQLException {
         try (Connection connection = getConnection(warehouseDB)) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO " + warehouseDB + ".Organic(id, database, description, certificationDate, expirationDate, originCountry, organization, foreignKey) values (?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO " + warehouseDB + ".Organic(" +
+                    "organic_ID, " +
+                    "organic_database, " +
+                    "organic_description, " +
+                    "organic_certificationDate, " +
+                    "organic_expirationDate, " +
+                    "organic_originCountry, " +
+                    "organic_organization, " +
+                    "organic_productsID) values " +
+                    "(?, ?, ?, ?, ?, ?, ?, ?)"
+            );
 
             statement.setString(1, id);
             statement.setString(2, database);
@@ -53,7 +62,6 @@ public class OrganicDB {
             statement.setString(7, organization);
             statement.setString(8, foreignKey);
 
-
             statement.executeUpdate();
             return new Organic(id, database, description, certificationDate, expirationDate, originCountry, organization);
         }
@@ -62,7 +70,16 @@ public class OrganicDB {
     public void update(Organic organic, String foreignKey) throws SQLException
     {
         try(Connection connection = getConnection(warehouseDB)){
-            PreparedStatement statement = connection.prepareStatement("UPDATE organic SET id=?, database=?, description=?, certificationDate=?, expirationDate=?, originCountry=?, organization=?, foreignKey=? where foreignKey=?");
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE organic SET " +
+                            "organic_ID=?, " +
+                            "organic_database=?, " +
+                            "organic_description=?, " +
+                            "organic_certificationDate=?, " +
+                            "organic_expirationDate=?, " +
+                            "organic_originCountry=?, " +
+                            "organic_organization=?, " +
+                            "organic_productsID=? WHERE organic_productsID=? AND organic_ID=?");
 
             statement.setString(1, organic.getId());
             statement.setString(2, organic.getDatabase());
@@ -72,6 +89,8 @@ public class OrganicDB {
             statement.setString(6, organic.getOriginCountry());
             statement.setString(7, organic.getOrganization());
             statement.setString(8, foreignKey);
+            statement.setString(9, foreignKey);
+            statement.setString(10, organic.getId());
 
             statement.executeUpdate();
         }
@@ -81,7 +100,7 @@ public class OrganicDB {
     public void delete(Organic organic, String foreignKey) throws SQLException
     {
         try(Connection connection = getConnection(warehouseDB)){
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM organic WHERE id LIKE ? AND foreignKey ?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM organic WHERE organic_ID=? AND organic_productsID=?");
             statement.setString(1, organic.getID());
             statement.setString(2, foreignKey);
             statement.executeUpdate();
