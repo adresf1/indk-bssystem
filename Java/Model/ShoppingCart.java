@@ -52,7 +52,7 @@ public class ShoppingCart implements PropertyChangeListener {
     }
   }
 
-  public void addListener(String reservedProduct, PropertyChangeListener listener) {
-    support.addPropertyChangeListener(reservedProduct, listener);
+  public void addListener(String eventName, PropertyChangeListener listener) {
+    support.addPropertyChangeListener(eventName, listener);
   }
 }
