@@ -47,7 +47,7 @@ public class BatchNumberDB {
                             "batch_description, " +
                             "batch_originCountry, " +
                             "batch_organization, " +
-                            "batch_productsID, " +
+                            "batch_productsID) values" +
                             "(?, ?, ?, ?, ?, ?)"
             );
 
@@ -72,7 +72,7 @@ public class BatchNumberDB {
                             "batch_description, " +
                             "batch_originCountry, " +
                             "batch_organization, " +
-                            "batch_productsID, " +
+                            "batch_productsID) values" +
                             "(?, ?, ?, ?, ?, ?)"
             );
             statement.setString(1, bn.getID());
@@ -90,12 +90,11 @@ public class BatchNumberDB {
         try (Connection connection = getConnection(warehouseDB)) {
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE batchNumber SET " +
-                            "batch_ID, " +
-                            "batch_database, " +
-                            "batch_description, " +
-                            "batch_originCountry, " +
-                            "batch_organization, " +
-                            "batch_productsID, " +
+                            "batch_ID=?, " +
+                            "batch_database=?, " +
+                            "batch_description=?, " +
+                            "batch_originCountry=?, " +
+                            "batch_organization=?, " +
                             "batch_productsID=? WHERE batch_productsID=? AND batch_ID=?");
 
             statement.setString(1, bn.getId());
