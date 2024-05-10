@@ -4,6 +4,7 @@ import Shared.TransferObject.Product;
 
 import java.util.ArrayList;
 
+/*
 public class ReservedProduct implements ShoppingCartInterface {
 
   private ArrayList<Product> products;
@@ -27,3 +28,5 @@ public class ReservedProduct implements ShoppingCartInterface {
     return products;
   }
 }
+
+ */

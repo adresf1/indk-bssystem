@@ -3,7 +3,7 @@ package Model;
 import Shared.TransferObject.Product;
 
 import java.util.ArrayList;
-
+/*
 public class UnreservedState implements ShoppingCartInterface {
 
   private ArrayList<Product> products;
@@ -27,7 +27,7 @@ public class UnreservedState implements ShoppingCartInterface {
     return products;
   }
 }
-
+*/
 
 
 
