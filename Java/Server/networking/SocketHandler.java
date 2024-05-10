@@ -12,19 +12,15 @@ import java.net.Socket;
 
 public class SocketHandler implements Runnable{
     private Socket socket;
-
     private ReserveManager reserveManager;
     private ObjectOutputStream outToClient;
-
     private ObjectInputStream inFromClient;
-
     private ConnectionPool connectionPool;
 
     public SocketHandler(Socket socket, ReserveManager reserveManager, ConnectionPool connectionPool) {
         this.socket = socket;
         this.reserveManager = reserveManager;
         this.connectionPool = connectionPool;
-
 
         try {
             outToClient = new ObjectOutputStream(socket.getOutputStream());
@@ -44,7 +40,6 @@ public class SocketHandler implements Runnable{
         while(true){
             try {
                 Request request = (Request) inFromClient.readObject();
-
                 if ("ProductAdded".equals(request.getType())) {
                     Product requestedProduct = (Product) request.getArg();
                     Product reservedProduct = reserveManager.reserveProduct(requestedProduct);
