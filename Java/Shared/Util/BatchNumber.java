@@ -4,15 +4,17 @@ public class BatchNumber implements Certification{
 
 
     public String id, database, description;
-    public String originCountry, orginization;
+    public String originCountry, organization, foreignKey;
 
+    public BatchNumber() {
+    }
 
     public BatchNumber(String id, String database, String description, String originCountry, String organization) {
         this.id = id;
         this.database = database;
         this.description = description;
         this.originCountry = originCountry;
-        this.orginization = organization;
+        this.organization = organization;
     }
 
     public String getId() {
@@ -43,13 +45,19 @@ public class BatchNumber implements Certification{
         this.originCountry = originCountry;
     }
 
-    public String getOrginization() {
-        return orginization;
+    public void setOrganization(String organization) {
+        this.organization = organization;
     }
 
-    public void setOrginization(String orginization) {
-        this.orginization = orginization;
+    public String getForeignKey() {
+        return foreignKey;
     }
+
+    public void setForeignKey(String foreignKey) {
+        this.foreignKey = foreignKey;
+    }
+
+
 
     @Override
     public Certification getCertificate() {
@@ -78,7 +86,7 @@ public class BatchNumber implements Certification{
 
     @Override
     public String getOrganization() {
-        return orginization;
+        return organization;
     }
 
     @Override
