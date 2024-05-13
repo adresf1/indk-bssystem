@@ -109,6 +109,24 @@ public class SocketClient implements Client, Subject
         return shoppingcart;
     }
 
+    public void requestAllProducts() {
+        try {
+            outToServer.writeObject(new Request("getAllProducts", null));
+            // Handle response from server...
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void searchProductByID(String ID) {
+        try {
+            outToServer.writeObject(new Request("searchProductByID", ID));
+            // Handle response from server...
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override public void addListener(String eventName,
         PropertyChangeListener listener)
     {

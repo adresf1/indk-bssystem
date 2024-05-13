@@ -178,4 +178,13 @@ public class ProductDAOImpl implements ProductDAO
     }
   }
 
+  public ArrayList<Product> getAllProducts() {
+
+    return null;
+  }
+
+  public ArrayList<Product> searchProductByID(String id) {
+
+      return null;
+  }
 }
