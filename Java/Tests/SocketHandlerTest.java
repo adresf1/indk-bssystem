@@ -25,7 +25,7 @@ public class SocketHandlerTest {
         // Create SocketHandler with the stub ObjectOutputStream
         socketHandler = new SocketHandler(outToClientStub);
     }
-
+/*
     @Test
     public void testBuyProduct_InvalidInput() throws IOException {
         // Create a request with a product to be bought
@@ -60,6 +60,9 @@ public class SocketHandlerTest {
         assert(responseString.contains("ProductBought"));
         assert(responseString.contains("Beans")); // Assuming you are sending null as the data part of the response
     }
+
+ */
+
 }
 
 

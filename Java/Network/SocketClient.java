@@ -2,7 +2,9 @@ package Network;
 
 import Shared.TransferObject.Product;
 import Shared.TransferObject.Request;
+import Shared.Util.Subject;
 
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,24 +14,24 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class SocketClient implements Client {
+public class SocketClient implements Client, Subject
+{
     private PropertyChangeSupport support;
     private ObjectOutputStream outToServer;
 
     private ObjectInputStream inFromServer;
 
-    private ArrayList<Product> boughtProducts;
+    private ArrayList<Product> shoppingcart;
 
     public SocketClient() {
-
-        support = new PropertyChangeSupport(this);
-        boughtProducts = new ArrayList<>();
 
         try {
             Socket socket = new Socket("localHost", 2910);
             outToServer = new ObjectOutputStream(socket.getOutputStream());
             inFromServer = new ObjectInputStream(socket.getInputStream());
-            new Thread(() -> listenToServer(null, null)).start();
+            shoppingcart = new ArrayList<>();
+            support = new PropertyChangeSupport(this);
+            new Thread(this::listenToServer).start();
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -39,19 +41,19 @@ public class SocketClient implements Client {
 
     public SocketClient(ObjectOutputStream outToServer) {
         this.outToServer = outToServer;
-        boughtProducts = new ArrayList<>();
     }
 
-    private void listenToServer(ObjectOutputStream outToServer, ObjectInputStream inFromServer) {
+    private void listenToServer() {
         try {
             //this.outToServer.writeObject(new Request("Listener", null));
 
             while(true){
                 Request request = (Request) this.inFromServer.readObject();
-                if ("ProductBought".equals(request.getType())){
+                if ("ProductAdded".equals(request.getType())){
+                    Product reservedProduct = (Product) request.getArg();
+                    shoppingcart.add(reservedProduct); // Add to cart
+                    support.firePropertyChange("ProductAdded", null, reservedProduct); // Notify listeners
                     System.out.println("Confirmation received from server");
-                    moveToBasket(request);
-                    System.out.println(boughtProducts);
                 }
                 else {
                     System.out.println("Request type not recognized ");
@@ -82,24 +84,41 @@ public class SocketClient implements Client {
     }
 
     @Override
-    public void buyProduct(Product product) {
+    public void reserveProduct(Product product) {
         try {
-            Request buyRequest = new Request("BuyProduct", product);
-            outToServer.writeObject(buyRequest);
+            outToServer.writeObject(new Request("ProductAdded", product));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /*
     public void moveToBasket(Request request) {
         if (request.getArg() instanceof Product) {
-            boughtProducts.add((Product) request.getArg());
+            Product product = (Product) request.getArg();
+            shoppingcart.add(product);
+            support.firePropertyChange("ProductAdded", null, product); //
         } else {
             throw new RuntimeException("request.getArg returned null with expected type being product");
         }
     }
+    */
+
     @Override
-    public ArrayList<Product> getBoughtProducts () {
-        return boughtProducts;
+    public ArrayList<Product> getReservedProducts () {
+        return shoppingcart;
+    }
+
+    @Override public void addListener(String eventName,
+        PropertyChangeListener listener)
+    {
+        support.addPropertyChangeListener(eventName, listener);
+    }
+
+    @Override public void removeListener(String eventName,
+        PropertyChangeListener listener)
+    {
+        support.removePropertyChangeListener(eventName, listener);
+
     }
 }
