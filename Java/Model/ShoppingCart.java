@@ -1,6 +1,8 @@
 package Model;
 
 import Shared.TransferObject.Product;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -8,11 +10,12 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
 public class ShoppingCart implements PropertyChangeListener {
-  private ArrayList<Product> products;
+  //private ArrayList<Product> products;
+  private ObservableList<Product> products;
   private PropertyChangeSupport support;
 
   public ShoppingCart() {
-    products = new ArrayList<>();
+    products = FXCollections.observableArrayList();
     support = new PropertyChangeSupport(this);
   }
 
@@ -55,4 +58,9 @@ public class ShoppingCart implements PropertyChangeListener {
   public void addListener(String eventName, PropertyChangeListener listener) {
     support.addPropertyChangeListener(eventName, listener);
   }
+
+  public ObservableList<Product> getObservableList(){
+    return products;
+  }
+
 }

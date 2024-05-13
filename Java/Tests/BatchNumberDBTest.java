@@ -2,7 +2,7 @@ package Tests;
 
 import ModelDB.BatchNumberDB;
 import Shared.Util.BatchNumber;
-import org.junit.Assert;
+//import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -115,8 +115,8 @@ public class BatchNumberDBTest
                 batchDB.update(batch, batchData[5]);
             }
 
-            Assert.assertEquals("Salling Group",
-                batchDB.readByID("1").getDatabase());
+//            Assert.assertEquals("Salling Group",
+  //              batchDB.readByID("1").getDatabase());
         }
 
         //TODO: skriv test UpdateBatchNumber

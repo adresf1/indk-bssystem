@@ -12,7 +12,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class SocketClient implements Client, Subject
 {
