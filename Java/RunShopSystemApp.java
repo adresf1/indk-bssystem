@@ -3,12 +3,15 @@ import Model.ShoppingCart;
 import Network.SocketClient;
 import Shared.TransferObject.Product;
 import Shared.Util.MyDate;
+import javafx.application.Application;
 
 
 public class RunShopSystemApp {
     public static void main(String[] args)
     {
+        Application.launch(ShopSystemApp.class);
 
+/*
         SocketClient client = new SocketClient();
         ShoppingCart shoppingCart = new ShoppingCart();
         MyDate MyDate = new MyDate(4,5,2024);
@@ -16,5 +19,7 @@ public class RunShopSystemApp {
                 2, 1.2, 4.4, 1.5, "Hej"));
         client.addListener("ProductAdded", shoppingCart);
         client.startClient();
+
+ */
     }
 }

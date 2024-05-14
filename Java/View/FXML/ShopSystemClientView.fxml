@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.StackPane?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ShopSystemClientView">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.PenguinMartViewController">
    <children>
       <BorderPane layoutX="-1.0" layoutY="1.0" prefHeight="400.0" prefWidth="594.0">
          <right>
-            <StackPane prefHeight="262.0" prefWidth="176.0" BorderPane.alignment="CENTER" />
+            <StackPane prefHeight="273.0" prefWidth="176.0" BorderPane.alignment="CENTER" />
          </right>
          <top>
             <HBox prefHeight="100.0" prefWidth="347.0" BorderPane.alignment="CENTER">
