@@ -42,5 +42,10 @@ public class ProductListCell extends ListCell<Product> {
             setGraphic(null);
         }
     }
+
+  public void addToShoppingcart(Product product)
+  {
+
+  }
 }
 
