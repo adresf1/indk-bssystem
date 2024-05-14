@@ -3,6 +3,7 @@ package Core;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -27,7 +28,6 @@ public class ViewHandler {
                 Parent root = loadFXML("../View/FXML/ShopSystemClientView.fxml");
                 stage.setTitle("PenguinMart");
                 PenguinMartClientScene = new Scene(root);
-
 
             } catch (IOException e) {
                 e.printStackTrace();
