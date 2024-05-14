@@ -4,7 +4,9 @@
 
     import java.util.ArrayList;
 
-    public interface BuyingManager {
+    public interface ReserveManager {
 
         ArrayList<Product> getProducts();
+
+        Product reserveProduct(Product requestedProduct);
     }
