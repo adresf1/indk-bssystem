@@ -112,8 +112,13 @@ public class SocketClient implements Client, Subject
     public void requestAllProducts() {
         try {
             outToServer.writeObject(new Request("getAllProducts", null));
-            // Handle response from server...
-        } catch (IOException e) {
+            Request response = (Request) inFromServer.readObject();
+            if ("allProducts".equals(response.getType())) {
+                ArrayList<Product> allProducts = (ArrayList<Product>) response.getArg();
+                // Do something with the list of products
+                //displayProducts(allProducts);
+            }
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -121,8 +126,13 @@ public class SocketClient implements Client, Subject
     public void searchProductByID(String ID) {
         try {
             outToServer.writeObject(new Request("searchProductByID", ID));
-            // Handle response from server...
-        } catch (IOException e) {
+            Request response = (Request) inFromServer.readObject();
+            if ("searchResults".equals(response.getType())) {
+                ArrayList<Product> searchResults = (ArrayList<Product>) response.getArg();
+                // Do something with the search results
+                //displaySearchResults(searchResults);
+            }
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

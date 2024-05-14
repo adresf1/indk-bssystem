@@ -179,12 +179,57 @@ public class ProductDAOImpl implements ProductDAO
   }
 
   public ArrayList<Product> getAllProducts() {
-
-    return null;
+    try (Connection connection = getConnection(warehouseDB)) {
+      PreparedStatement statement = connection.prepareStatement("SELECT * FROM products");
+      ResultSet resultSet = statement.executeQuery();
+      ArrayList<Product> products = new ArrayList<>();
+      while (resultSet.next()) {
+        Product product = new Product(
+                resultSet.getString("products_name"),
+                resultSet.getString("products_id"),
+                resultSet.getInt("products_category"),
+                resultSet.getString("products_productDescription"),
+                MyDate.fromString(resultSet.getString("products_productionDate")),
+                MyDate.fromString(resultSet.getString("products_expirationDate")),
+                resultSet.getInt("products_barcode"),
+                resultSet.getDouble("products_price"),
+                resultSet.getDouble("products_quantity"),
+                resultSet.getDouble("products_lowStock"),
+                resultSet.getString("products_unitType")
+        );
+        products.add(product);
+      }
+      return products;
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public ArrayList<Product> searchProductByID(String id) {
-
-      return null;
+    try (Connection connection = getConnection(warehouseDB)) {
+      PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE products_id = ?");
+      statement.setString(1, id);
+      ResultSet resultSet = statement.executeQuery();
+      ArrayList<Product> products = new ArrayList<>();
+      while (resultSet.next()) {
+        Product product = new Product(
+                resultSet.getString("products_name"),
+                resultSet.getString("products_id"),
+                resultSet.getInt("products_category"),
+                resultSet.getString("products_productDescription"),
+                MyDate.fromString(resultSet.getString("products_productionDate")),
+                MyDate.fromString(resultSet.getString("products_expirationDate")),
+                resultSet.getInt("products_barcode"),
+                resultSet.getDouble("products_price"),
+                resultSet.getDouble("products_quantity"),
+                resultSet.getDouble("products_lowStock"),
+                resultSet.getString("products_unitType")
+        );
+        products.add(product);
+      }
+      return products;
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
