@@ -43,9 +43,5 @@ public class ProductListCell extends ListCell<Product> {
         }
     }
 
-  public void addToShoppingcart(Product product)
-  {
-
-  }
 }
 

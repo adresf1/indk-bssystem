@@ -13,14 +13,15 @@ import java.util.ArrayList;
 public class PenguinMartViewModel {
     private StringProperty username, textinput;
 
-    private ObservableList<Product> globalChat;
-    private IShopSystemManager IShopSystemManager;
+    private ObservableList<Product> shoppingCart;
+    private IShopSystemManager shopSystemManager;
 
     public PenguinMartViewModel(IShopSystemManager shopSystemManager) {
-        this.IShopSystemManager = shopSystemManager;
+        this.shopSystemManager = shopSystemManager;
         this.username = new SimpleStringProperty();
         this.textinput = new SimpleStringProperty();
-        IShopSystemManager.addListener("GlobalChatUpdate", this::onUpdateGlobalChat);
+        shopSystemManager.addListener("GlobalChatUpdate", this::onUpdateGlobalChat);
+        shoppingCart = FXCollections.observableList(new ArrayList<Product>());
     }
 
     private void onUpdateGlobalChat(PropertyChangeEvent propertyChangeEvent) {
@@ -34,8 +35,8 @@ public class PenguinMartViewModel {
 
     }
 
-    public void sendProduct() {
-        //        String result = IShopSystemManager.sendProduct(textinput.getValue(),username.getValue());
+    public void moveToBasket(Product p) {
+        shopSystemManager.moveToBasket(p);
     }
 
     //UsernameTextfield
@@ -44,5 +45,9 @@ public class PenguinMartViewModel {
     }
     public StringProperty usernameProperty() {
         return username;
+    }
+
+    public ObservableList<Product> getShoppingCart() {
+        return shoppingCart;
     }
 }

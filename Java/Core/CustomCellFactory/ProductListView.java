@@ -12,7 +12,22 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-public class ProductListView extends Application {
+public class ProductListView{
+
+    public ProductListView(ObservableList<Product> cart, StackPane sp){
+
+        final ListView<Product> listView = new ListView<Product>(cart);
+        listView.setCellFactory(new Callback<ListView<Product>, ListCell<Product>>() {
+            @Override
+            public ListCell<Product> call(ListView<Product> listView) {
+                return new ProductListCell();
+            }
+        });
+
+        sp.getChildren().add(listView);
+    }
+
+    /*
     //private Product product;
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -39,4 +54,6 @@ public class ProductListView extends Application {
         primaryStage.setScene(new Scene(root, 200, 250));
         primaryStage.show();
     }
+    */
+
 }
