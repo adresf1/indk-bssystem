@@ -21,7 +21,7 @@ public class RunShopSystemApp {
         });
 
         // Request all products from the server
-        client.requestAllProducts();
+       // client.requestAllProducts();
 
         client.startClient();
     }

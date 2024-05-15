@@ -51,6 +51,7 @@ public class SocketHandler implements Runnable {
         try {
             while (true) {
                 Request request = (Request) inFromClient.readObject();
+                System.out.println("SocketHandler Run received request" + request.getType());
                 String requestType = request.getType();
                 RequestHandler handler = requestHandlers.get(requestType);
                 if (handler != null) {
@@ -66,7 +67,9 @@ public class SocketHandler implements Runnable {
 
     // Handler metode for "getAllProducts" request
     private void handleGetAllProducts(Request request) throws IOException {
-        Product product = productDAOImpl.getProduct();
+        String ID = (String) request.getArg();
+        Product product = productDAOImpl.getProduct(ID);
+        System.out.println("Product type being sent: " + product.getID());
         outToClient.writeObject(new Request("getProduct", product));
         outToClient.flush();
     }

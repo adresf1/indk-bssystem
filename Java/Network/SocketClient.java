@@ -46,10 +46,11 @@ public class SocketClient implements Client, Subject
 
     private void listenToServer() {
         try {
-            //this.outToServer.writeObject(new Request("Listener", null));
+           // this.outToServer.writeObject(new Request("Listener", null));
 
             while(true){
                 Request request = (Request) this.inFromServer.readObject();
+                System.out.println("Listen to server request from server " + request.getType());
                 if ("ProductAdded".equals(request.getType())){
                     Product reservedProduct = (Product) request.getArg();
                     shoppingcart.add(reservedProduct); // Add to cart
@@ -72,9 +73,9 @@ public class SocketClient implements Client, Subject
     }
 
    @Override
-    public Product getProduct(String products_id) {
+    public Product getProduct() {
         try {
-            outToServer.writeObject(new Request("getProduct", products_id));
+            outToServer.writeObject(new Request("getProduct", null));
             outToServer.flush();
             Request response = (Request) inFromServer.readObject();
             return  (Product) response.getArg();
@@ -121,22 +122,22 @@ public class SocketClient implements Client, Subject
     }
 
 
-        public void requestAllProducts() {
-        try {
-            outToServer.writeObject(new Request("getAllProducts", null));
-            outToServer.flush();
-//            Request response = (Request) inFromServer.readObject();
-//            if ("allProducts".equals(response.getType())) {
-//                ArrayList<Product> allProducts = (ArrayList<Product>) response.getArg();
-//                // Do something with the list of products
-//                displayProducts(allProducts);
-//            }
-        }
-        catch (IOException e)
-        {
-          throw new RuntimeException(e);
-        }
-        }
+//        public void requestAllProducts() {
+//        try {
+//            outToServer.writeObject(new Request("getAllProducts", null));
+//            outToServer.flush();
+////            Request response = (Request) inFromServer.readObject();
+////            if ("allProducts".equals(response.getType())) {
+////                ArrayList<Product> allProducts = (ArrayList<Product>) response.getArg();
+////                // Do something with the list of products
+////                displayProducts(allProducts);
+////            }
+//        }
+//        catch (IOException e)
+//        {
+//          throw new RuntimeException(e);
+//        }
+//        }
 
     public void searchProductByID(String ID) {
         try {

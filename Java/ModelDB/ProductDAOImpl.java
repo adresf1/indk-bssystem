@@ -196,13 +196,13 @@ public class ProductDAOImpl implements ProductDAO
     }
   }
 
-  public Product getProduct()
+  public Product getProduct(String id)
   {
     try (Connection connection = getConnection(warehouseDB))
     {
       PreparedStatement statement = connection.prepareStatement(
-          "SELECT * FROM products WHERE products_id = ?");
-      statement.setString(1, "products_id");
+          "SELECT * FROM products WHERE products_id LIKE ?");
+      statement.setString(1, id);
 
       ResultSet resultSet = statement.executeQuery();
       if (resultSet.next())

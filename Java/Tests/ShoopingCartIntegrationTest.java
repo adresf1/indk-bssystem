@@ -31,10 +31,10 @@ public class ShoopingCartIntegrationTest
   @Test void testAddProductToShoppingCart()
   {
     // Hent produkter fra databasen
-    socketClient.requestAllProducts();
+    //socketClient.requestAllProducts();
 
     // Simulér valg af et produkt fra den hentede liste
-    Product product = socketClient.getProduct("1");
+    Product product = socketClient.getProduct();
     //Product selectedProduct = allProducts.get(0); // Antager at det første produkt vælges
 
     // Reserver det valgte produkt
