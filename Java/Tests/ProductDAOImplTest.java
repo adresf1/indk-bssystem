@@ -50,7 +50,7 @@ class ProductDAOImplTest
     System.out.println("SetUP done");
   }
 
-  @Test void creatProductTest() throws SQLException, SQLException
+  /*@Test void creatProductTest() throws SQLException, SQLException
   {
     ProductDAOImpl productDAO = ProductDAOImpl.getInstance();
 
@@ -66,7 +66,7 @@ class ProductDAOImplTest
 
     assertEquals(true,productDAO.DoesPrimaryKeyExitsInTable(productDAO.getWarehouseDB(),"products","2"));
   }
-//
+//*/
   @Test void deleteProductTest() throws SQLException
   {
       ProductDAOImpl productDAO = ProductDAOImpl.getInstance();

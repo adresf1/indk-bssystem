@@ -38,7 +38,7 @@ public class ShoopingCartIntegrationTest
     //Product selectedProduct = allProducts.get(0); // Antager at det første produkt vælges
 
     // Reserver det valgte produkt
-    socketClient.reserveProductByID(product);
+    socketClient.reserveProductByID("1");
 
     // Vent lidt tid for at tillade behandling af serverbeskeder
     // Dette afhænger af, hvordan din klient og server er implementeret

@@ -73,8 +73,8 @@ public class SocketHandler implements Runnable {
     private void handleGetAllProducts(Request request) throws IOException {
         String ID = (String) request.getArg();
         Product product = productDAOImpl.getProduct(ID);
-        System.out.println("Product type being sent: " + product.getID());
-        outToClient.writeObject(new Request("getProduct", product.getID()));
+        System.out.println("Product type being sent: "+ product.getID());
+        outToClient.writeObject(new Request("getProduct", product));
         outToClient.flush();
     }
 

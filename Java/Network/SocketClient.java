@@ -49,6 +49,8 @@ public class SocketClient implements Client, Subject
            // this.outToServer.writeObject(new Request("Listener", null));
 
             while(true){
+                System.out.println("Entering while loop");
+
                 Request request = (Request) this.inFromServer.readObject();
                 System.out.println("Listen to server request from server " + request.getType());
                 if ("ProductAdded".equals(request.getType())){
@@ -58,8 +60,8 @@ public class SocketClient implements Client, Subject
                     System.out.println("Confirmation received from server");
                 }
                 else if ("getProduct".equals(request.getType())) {
-                  Product product = (Product) request.getArg();
-                  System.out.println("Product received: " + product.getName());
+                  String product = (String) request.getArg();
+                  System.out.println("Product received: " + product);
                  // support.firePropertyChange("handleGetAllProducts", null, product);
                 } else {
                   System.out.println("Request type not recognized ");
@@ -86,6 +88,7 @@ public class SocketClient implements Client, Subject
             outToServer.writeObject(new Request("getProduct", id));
             outToServer.flush();
             Request response = (Request) inFromServer.readObject();
+            System.out.println("getProduct: " + response.getArg().toString());
             return  (String) response.getArg();
           }
 

@@ -130,7 +130,7 @@ public class ProductDAOImpl implements ProductDAO
   {
     String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=" + database;
     System.out.println(url);
-    return DriverManager.getConnection(url, "postgres", "Kika12345");
+    return DriverManager.getConnection(url, "postgres", "KarlDen12.");
   }
 
   @Override public void update(Product product) throws SQLException
@@ -220,7 +220,7 @@ public class ProductDAOImpl implements ProductDAO
         double lowStock = resultSet.getDouble("products_lowStock");
         String unitType = resultSet.getString("products_unitType");
 
-        return new Product(ID,name, category, productDescription,
+        return new Product(name, ID, category, productDescription,
             MyDate.fromString(productionDate), MyDate.fromString(expirationDate),
             barcode, price, quantity, lowStock, unitType);
       }
