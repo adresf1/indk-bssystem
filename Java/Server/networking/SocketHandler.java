@@ -33,12 +33,13 @@ public class SocketHandler implements Runnable {
 
         // Initialize the map
         requestHandlers = new HashMap<>();
-        requestHandlers.put("getAllProducts", this::handleGetAllProducts);
+        requestHandlers.put("getProduct", this::handleGetAllProducts);
         requestHandlers.put("searchProductByID", this::handleSearchProductByID);
         requestHandlers.put("ProductAdded", this::handleProductAdded);
 
         try {
             outToClient = new ObjectOutputStream(socket.getOutputStream());
+            outToClient.flush();
             inFromClient = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -65,8 +66,9 @@ public class SocketHandler implements Runnable {
 
     // Handler metode for "getAllProducts" request
     private void handleGetAllProducts(Request request) throws IOException {
-        ArrayList<Product> allProducts = productDAOImpl.getAllProducts();
-        outToClient.writeObject(new Request("allProducts", allProducts));
+        Product product = productDAOImpl.getProduct();
+        outToClient.writeObject(new Request("getProduct", product));
+        outToClient.flush();
     }
 
     // Handler metode for "searchProductByID" request
@@ -74,6 +76,7 @@ public class SocketHandler implements Runnable {
         String ID = (String) request.getArg();
         ArrayList<Product> searchResults = productDAOImpl.searchProductByID(ID);
         outToClient.writeObject(new Request("searchResults", searchResults));
+        outToClient.flush();
     }
 
     // Handler metode for "ProductAdded" request
@@ -82,12 +85,14 @@ public class SocketHandler implements Runnable {
         Product reservedProduct = reserveManager.reserveProduct(requestedProduct);
         if (reservedProduct != null) {
             outToClient.writeObject(new Request("ProductAdded", reservedProduct));
+            outToClient.flush();
         }
     }
 
     public void sendRequest(Request request) {
         try {
             outToClient.writeObject(request);
+            outToClient.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -28,6 +28,7 @@ public class SocketClient implements Client, Subject
         try {
             Socket socket = new Socket("localHost", 2910);
             outToServer = new ObjectOutputStream(socket.getOutputStream());
+            outToServer.flush();
             inFromServer = new ObjectInputStream(socket.getInputStream());
             shoppingcart = new ArrayList<>();
             support = new PropertyChangeSupport(this);
@@ -70,12 +71,13 @@ public class SocketClient implements Client, Subject
     public void startClient() {
     }
 
-    @Override
-    public ArrayList<Product> getProduct() {
+   @Override
+    public Product getProduct(String products_id) {
         try {
-            outToServer.writeObject(new Request("getProductList", null));
+            outToServer.writeObject(new Request("getProduct", products_id));
+            outToServer.flush();
             Request response = (Request) inFromServer.readObject();
-            return (ArrayList<Product>) response.getArg();
+            return  (Product) response.getArg();
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -87,6 +89,7 @@ public class SocketClient implements Client, Subject
     public void reserveProduct(Product product) {
         try {
             outToServer.writeObject(new Request("ProductAdded", product));
+            outToServer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -108,24 +111,37 @@ public class SocketClient implements Client, Subject
     public ArrayList<Product> getReservedProducts () {
         return shoppingcart;
     }
-
-    public void requestAllProducts() {
-        try {
-            outToServer.writeObject(new Request("getAllProducts", null));
-            Request response = (Request) inFromServer.readObject();
-            if ("allProducts".equals(response.getType())) {
-                ArrayList<Product> allProducts = (ArrayList<Product>) response.getArg();
-                // Do something with the list of products
-                //displayProducts(allProducts);
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+    private void displayProducts(ArrayList<Product> products)
+    {
+        System.out.println("All Products:");
+        for (Product product : products)
+        {
+            System.out.println(product.getName() + " - " + product.getPrice());
         }
     }
+
+
+        public void requestAllProducts() {
+        try {
+            outToServer.writeObject(new Request("getAllProducts", null));
+            outToServer.flush();
+//            Request response = (Request) inFromServer.readObject();
+//            if ("allProducts".equals(response.getType())) {
+//                ArrayList<Product> allProducts = (ArrayList<Product>) response.getArg();
+//                // Do something with the list of products
+//                displayProducts(allProducts);
+//            }
+        }
+        catch (IOException e)
+        {
+          throw new RuntimeException(e);
+        }
+        }
 
     public void searchProductByID(String ID) {
         try {
             outToServer.writeObject(new Request("searchProductByID", ID));
+            outToServer.flush();
             Request response = (Request) inFromServer.readObject();
             if ("searchResults".equals(response.getType())) {
                 ArrayList<Product> searchResults = (ArrayList<Product>) response.getArg();
@@ -136,6 +152,7 @@ public class SocketClient implements Client, Subject
             throw new RuntimeException(e);
         }
     }
+
 
     @Override public void addListener(String eventName,
         PropertyChangeListener listener)

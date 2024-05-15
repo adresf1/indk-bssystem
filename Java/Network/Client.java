@@ -5,7 +5,7 @@ import Shared.TransferObject.Product;
 import java.util.ArrayList;
 
 public interface Client {
-    ArrayList<Product> getProduct();
+    Product getProduct(String product_id);
 
     void reserveProduct(Product product);
 
