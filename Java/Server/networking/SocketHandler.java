@@ -54,14 +54,18 @@ public class SocketHandler implements Runnable {
                 System.out.println("SocketHandler Run received request" + request.getType());
                 String requestType = request.getType();
                 RequestHandler handler = requestHandlers.get(requestType);
-                if (handler != null) {
+                if (handler != null)
+                {
                     handler.handle(request);
-                } else {
+                }
+                else {
                     System.out.println("Request Type not recognized: " + requestType);
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            System.err.println("Error listening to server: " + e.getMessage());
+            e.printStackTrace();
+            closeResources();
         }
     }
 
@@ -70,7 +74,7 @@ public class SocketHandler implements Runnable {
         String ID = (String) request.getArg();
         Product product = productDAOImpl.getProduct(ID);
         System.out.println("Product type being sent: " + product.getID());
-        outToClient.writeObject(new Request("getProduct", product));
+        outToClient.writeObject(new Request("getProduct", product.getID()));
         outToClient.flush();
     }
 
@@ -91,11 +95,20 @@ public class SocketHandler implements Runnable {
             outToClient.flush();
         }
     }
+    private void closeResources() {
+        try {
+            if (outToClient != null) outToClient.close();
+            if (inFromClient != null) inFromClient.close();
+            if (socket != null) socket.close();
+        } catch (IOException e) {
+            System.err.println("Error closing resources: " + e.getMessage());
+        }
+    }
 
     public void sendRequest(Request request) {
         try {
             outToClient.writeObject(request);
-            outToClient.flush();
+            //outToClient.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

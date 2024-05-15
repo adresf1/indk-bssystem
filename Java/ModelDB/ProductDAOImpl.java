@@ -207,8 +207,8 @@ public class ProductDAOImpl implements ProductDAO
       ResultSet resultSet = statement.executeQuery();
       if (resultSet.next())
       {
-        String name = resultSet.getString("products_name");
         String ID = resultSet.getString("products_id");
+        String name = resultSet.getString("products_name");
         int category = resultSet.getInt("products_category");
         String productDescription = resultSet.getString(
             "products_productDescription");
@@ -220,7 +220,7 @@ public class ProductDAOImpl implements ProductDAO
         double lowStock = resultSet.getDouble("products_lowStock");
         String unitType = resultSet.getString("products_unitType");
 
-        return new Product(name, ID, category, productDescription,
+        return new Product(ID,name, category, productDescription,
             MyDate.fromString(productionDate), MyDate.fromString(expirationDate),
             barcode, price, quantity, lowStock, unitType);
       }

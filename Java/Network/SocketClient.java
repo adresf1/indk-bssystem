@@ -57,13 +57,19 @@ public class SocketClient implements Client, Subject
                     support.firePropertyChange("ProductAdded", null, reservedProduct); // Notify listeners
                     System.out.println("Confirmation received from server");
                 }
-                else {
-                    System.out.println("Request type not recognized ");
+                else if ("getProduct".equals(request.getType())) {
+                  Product product = (Product) request.getArg();
+                  System.out.println("Product received: " + product.getName());
+                 // support.firePropertyChange("handleGetAllProducts", null, product);
+                } else {
+                  System.out.println("Request type not recognized ");
                 }
 
             }
         } catch (IOException|ClassNotFoundException e) {
-            throw new RuntimeException(e);
+          System.err.println("Error listening to server: " + e.getMessage());
+          e.printStackTrace();
+          closeResources();
         }
 
     }
@@ -73,12 +79,15 @@ public class SocketClient implements Client, Subject
     }
 
    @Override
-    public Product getProduct() {
+    public String getProduct(String id) {
         try {
-            outToServer.writeObject(new Request("getProduct", null));
+          while(true)
+          {
+            outToServer.writeObject(new Request("getProduct", id));
             outToServer.flush();
             Request response = (Request) inFromServer.readObject();
-            return  (Product) response.getArg();
+            return  (String) response.getArg();
+          }
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -95,6 +104,15 @@ public class SocketClient implements Client, Subject
             throw new RuntimeException(e);
         }
     }
+
+  public void reserveProductByID(String id) {
+    try {
+      outToServer.writeObject(new Request("ProductAdded", id));
+      outToServer.flush();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
     /*
     public void moveToBasket(Request request) {
@@ -138,21 +156,21 @@ public class SocketClient implements Client, Subject
 //          throw new RuntimeException(e);
 //        }
 //        }
-
-    public void searchProductByID(String ID) {
-        try {
-            outToServer.writeObject(new Request("searchProductByID", ID));
-            outToServer.flush();
-            Request response = (Request) inFromServer.readObject();
-            if ("searchResults".equals(response.getType())) {
-                ArrayList<Product> searchResults = (ArrayList<Product>) response.getArg();
-                // Do something with the search results
-                //displaySearchResults(searchResults);
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//
+//    public void searchProductByID(String ID) {
+//        try {
+//            outToServer.writeObject(new Request("searchProductByID", ID));
+//            outToServer.flush();
+//            Request response = (Request) inFromServer.readObject();
+//            if ("searchResults".equals(response.getType())) {
+//                ArrayList<Product> searchResults = (ArrayList<Product>) response.getArg();
+//                // Do something with the search results
+//                //displaySearchResults(searchResults);
+//            }
+//        } catch (IOException | ClassNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 
     @Override public void addListener(String eventName,
@@ -167,4 +185,12 @@ public class SocketClient implements Client, Subject
         support.removePropertyChangeListener(eventName, listener);
 
     }
+  private void closeResources() {
+    try {
+      if (outToServer != null) outToServer.close();
+      if (inFromServer != null) inFromServer.close();
+    } catch (IOException e) {
+      System.err.println("Error closing resources: " + e.getMessage());
+    }
+  }
 }

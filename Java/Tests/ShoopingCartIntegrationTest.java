@@ -34,11 +34,11 @@ public class ShoopingCartIntegrationTest
     //socketClient.requestAllProducts();
 
     // Simulér valg af et produkt fra den hentede liste
-    Product product = socketClient.getProduct();
+    String product =  socketClient.getProduct("1");
     //Product selectedProduct = allProducts.get(0); // Antager at det første produkt vælges
 
     // Reserver det valgte produkt
-    socketClient.reserveProduct(product);
+    socketClient.reserveProductByID(product);
 
     // Vent lidt tid for at tillade behandling af serverbeskeder
     // Dette afhænger af, hvordan din klient og server er implementeret
