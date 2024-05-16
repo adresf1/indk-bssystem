@@ -13,7 +13,7 @@
          <top>
             <HBox prefHeight="100.0" prefWidth="347.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onPressed_getAllProducts" text="Tilføj til Kurve">
+                  <Button mnemonicParsing="false" onAction="#onPressed_moveToBasket" text="Tilføj til Kurve">
                      <HBox.margin>
                         <Insets left="150.0" top="50.0" />
                      </HBox.margin>
@@ -30,13 +30,13 @@
                            <children>
                               <TableView fx:id="presentedProducts" layoutX="2.0" layoutY="-2.0" prefHeight="270.0" prefWidth="421.0">
                                 <columns>
-                                  <TableColumn prefWidth="63.333338499069214" text="Name" />
-                                    <TableColumn prefWidth="58.66668701171875" text="Price" />
-                                    <TableColumn prefWidth="55.999961853027344" text="Quantity" />
-                                    <TableColumn prefWidth="67.3333740234375" text="EDate" />
-                                    <TableColumn prefWidth="38.00007629394531" text="C2" />
-                                    <TableColumn prefWidth="58.66668701171875" text="category" />
-                                    <TableColumn prefWidth="76.0" text="quantity" />
+                                  <TableColumn prefWidth="63.333338499069214" text="Name" fx:id="name"/>
+                                    <TableColumn prefWidth="58.66668701171875" text="Price" fx:id="price" />
+                                    <TableColumn prefWidth="55.999961853027344" text="Quantity" fx:id="quantity"/>
+                                    <TableColumn prefWidth="67.3333740234375" text="ExpirationDate" fx:id="expirationDate"/>
+                                    <TableColumn prefWidth="38.00007629394531" text="Barcode" fx:id="barcode"/>
+                                    <TableColumn prefWidth="58.66668701171875" text="Category" fx:id="category" />
+                                    <TableColumn prefWidth="76.0" text="UnitType" fx:id="unitType"/>
                                 </columns>
                               </TableView>
                            </children>

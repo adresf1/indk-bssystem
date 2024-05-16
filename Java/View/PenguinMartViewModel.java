@@ -36,7 +36,7 @@ public class PenguinMartViewModel {
     }
 
     public void moveToBasket(Product p) {
-        shopSystemManager.moveToBasket(p);
+        shoppingCart.add(p);
     }
 
     public void allProductsToStackPane(){
@@ -57,4 +57,10 @@ public class PenguinMartViewModel {
     public ObservableList<Product> getShoppingCart() {
         return shoppingCart;
     }
+
+    public ObservableList<Product> getAllProducts(){
+        ObservableList<Product> templist = FXCollections.observableList(shopSystemManager.getAllProducts());
+        return templist;
+    }
+
 }
