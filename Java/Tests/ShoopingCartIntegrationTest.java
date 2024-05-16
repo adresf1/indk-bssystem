@@ -28,6 +28,12 @@ public class ShoopingCartIntegrationTest
     cart = new ShoppingCart();
   }
 
+  @Test void testTest()
+  {
+    socketClient.test();
+    socketClient.test();
+  }
+
   @Test void testAddProductToShoppingCart()
   {
     // Hent produkter fra databasen

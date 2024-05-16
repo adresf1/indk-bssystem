@@ -81,7 +81,15 @@ public class SocketHandler implements Runnable {
     // Handler metode for "searchProductByID" request
     private void handleSearchProductByID(Request request) throws IOException {
         String ID = (String) request.getArg();
-        ArrayList<Product> searchResults = productDAOImpl.searchProductByID(ID);
+        Product product1 = productDAOImpl.getProduct("1");
+        Product product2 = productDAOImpl.getProduct("2");
+        Product product3 = productDAOImpl.getProduct("3");
+        Product product4 = productDAOImpl.getProduct("4");
+        ArrayList<Product> searchResults = new ArrayList<>();
+        searchResults.add(product1);
+        searchResults.add(product2);
+        searchResults.add(product3);
+        searchResults.add(product4);
         outToClient.writeObject(new Request("searchResults", searchResults));
         outToClient.flush();
     }

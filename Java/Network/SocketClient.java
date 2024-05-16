@@ -26,7 +26,7 @@ public class SocketClient implements Client, Subject
     public SocketClient() {
 
         try {
-            Socket socket = new Socket("localHost", 2910);
+            Socket socket = new Socket("localhost", 2910);
             outToServer = new ObjectOutputStream(socket.getOutputStream());
             outToServer.flush();
             inFromServer = new ObjectInputStream(socket.getInputStream());
@@ -50,12 +50,11 @@ public class SocketClient implements Client, Subject
 
             while(true){
                 System.out.println("Entering while loop");
-
                 Request request = (Request) this.inFromServer.readObject();
                 System.out.println("Listen to server request from server " + request.getType());
                 if ("ProductAdded".equals(request.getType())){
                     Product reservedProduct = (Product) request.getArg();
-                    shoppingcart.add(reservedProduct); // Add to cart
+                    //shoppingcart.add(reservedProduct); // Add to cart
                     support.firePropertyChange("ProductAdded", null, reservedProduct); // Notify listeners
                     System.out.println("Confirmation received from server");
                 }
@@ -66,7 +65,6 @@ public class SocketClient implements Client, Subject
                 } else {
                   System.out.println("Request type not recognized ");
                 }
-
             }
         } catch (IOException|ClassNotFoundException e) {
           System.err.println("Error listening to server: " + e.getMessage());
@@ -160,20 +158,20 @@ public class SocketClient implements Client, Subject
 //        }
 //        }
 //
-//    public void searchProductByID(String ID) {
-//        try {
-//            outToServer.writeObject(new Request("searchProductByID", ID));
-//            outToServer.flush();
-//            Request response = (Request) inFromServer.readObject();
-//            if ("searchResults".equals(response.getType())) {
-//                ArrayList<Product> searchResults = (ArrayList<Product>) response.getArg();
-//                // Do something with the search results
-//                //displaySearchResults(searchResults);
-//            }
-//        } catch (IOException | ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    public ArrayList<Product> searchProductByID(String ID) {
+        try {
+            outToServer.writeObject(new Request("searchProductByID", ID));
+            outToServer.flush();
+            Request response = (Request) inFromServer.readObject();
+            if ("searchResults".equals(response.getType())) {
+                 return (ArrayList<Product>) response.getArg();
+
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 
 
     @Override public void addListener(String eventName,
