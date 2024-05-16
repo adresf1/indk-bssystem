@@ -39,6 +39,13 @@ public class PenguinMartViewModel {
         shopSystemManager.moveToBasket(p);
     }
 
+    public void allProductsToStackPane(){
+        ArrayList<Product> products = shopSystemManager.getAllProducts();
+        for(Product item : products){
+            shoppingCart.add(item);
+        }
+    }
+
     //UsernameTextfield
     public StringProperty ProductProperty() {
         return textinput;

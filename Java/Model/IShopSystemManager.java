@@ -14,5 +14,6 @@ public interface IShopSystemManager extends Subject {
 
     void buyProduct(ArrayList<Product> products);
 
+    ArrayList<Product> getAllProducts();
 
 }

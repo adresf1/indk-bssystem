@@ -1,21 +1,14 @@
 package View;
 
-import Core.CustomCellFactory.ProductListCell;
 import Core.CustomCellFactory.ProductListView;
 import Core.ViewController;
 import Core.ViewHandler;
 import Core.ViewModelFactory;
 import Shared.TransferObject.Product;
-import Shared.Util.MyDate;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
-import javafx.util.Callback;
-
-import java.util.Scanner;
 
 public class PenguinMartViewController implements ViewController {
 
@@ -48,5 +41,10 @@ public class PenguinMartViewController implements ViewController {
             Product p = presentedProducts.getSelectionModel().getSelectedItem();
             viewModel.moveToBasket(p);
         }
+    }
+
+    @FXML
+    public void onPressed_getAllProducts(){
+        viewModel.allProductsToStackPane();
     }
 }

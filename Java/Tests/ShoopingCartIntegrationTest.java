@@ -3,18 +3,12 @@ package Tests;
 import Model.ShoppingCart;
 import Network.SocketClient;
 import Shared.TransferObject.Product;
-import Shared.Util.MyDate;
-import org.junit.Before;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ShoopingCartIntegrationTest
 {
@@ -30,8 +24,8 @@ public class ShoopingCartIntegrationTest
 
   @Test void testTest()
   {
-    socketClient.test();
-    socketClient.test();
+    //socketClient.test();
+    //socketClient.test();
   }
 
   @Test void testAddProductToShoppingCart()

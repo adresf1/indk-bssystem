@@ -18,6 +18,7 @@ public class ShopSystemManager implements IShopSystemManager {
         support = new PropertyChangeSupport(this);
         searchResult = new ArrayList<>();
         shoppingCart = new ShoppingCart();
+        this.client = client;
     }
 
 
@@ -42,6 +43,11 @@ public class ShopSystemManager implements IShopSystemManager {
     @Override
     public void buyProduct(ArrayList<Product> products) {
 
+    }
+
+    @Override
+    public ArrayList<Product> getAllProducts() {
+        return client.searchProductByID("1");
     }
 
     @Override

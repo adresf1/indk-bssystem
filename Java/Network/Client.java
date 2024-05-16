@@ -10,6 +10,8 @@ public interface Client {
     void reserveProduct(Product product);
 
     ArrayList<Product> getReservedProducts();
+
+    ArrayList<Product> searchProductByID(String ID);
     void startClient();
 
 }
