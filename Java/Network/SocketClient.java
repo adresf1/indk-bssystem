@@ -26,8 +26,9 @@ public class SocketClient implements Client, Subject
     public SocketClient() {
 
         try {
-            Socket socket = new Socket("localHost", 2910);
+            Socket socket = new Socket("localhost", 2910);
             outToServer = new ObjectOutputStream(socket.getOutputStream());
+            outToServer.flush();
             inFromServer = new ObjectInputStream(socket.getInputStream());
             shoppingcart = new ArrayList<>();
             support = new PropertyChangeSupport(this);
@@ -45,23 +46,30 @@ public class SocketClient implements Client, Subject
 
     private void listenToServer() {
         try {
-            //this.outToServer.writeObject(new Request("Listener", null));
+           // this.outToServer.writeObject(new Request("Listener", null));
 
             while(true){
+                System.out.println("Entering while loop");
                 Request request = (Request) this.inFromServer.readObject();
+                System.out.println("Listen to server request from server " + request.getType());
                 if ("ProductAdded".equals(request.getType())){
                     Product reservedProduct = (Product) request.getArg();
-                    shoppingcart.add(reservedProduct); // Add to cart
+                    //shoppingcart.add(reservedProduct); // Add to cart
                     support.firePropertyChange("ProductAdded", null, reservedProduct); // Notify listeners
                     System.out.println("Confirmation received from server");
                 }
-                else {
-                    System.out.println("Request type not recognized ");
+                else if ("getProduct".equals(request.getType())) {
+                  String product = (String) request.getArg();
+                  System.out.println("Product received: " + product);
+                 // support.firePropertyChange("handleGetAllProducts", null, product);
+                } else {
+                  System.out.println("Request type not recognized ");
                 }
-
             }
         } catch (IOException|ClassNotFoundException e) {
-            throw new RuntimeException(e);
+          System.err.println("Error listening to server: " + e.getMessage());
+          e.printStackTrace();
+          closeResources();
         }
 
     }
@@ -70,12 +78,17 @@ public class SocketClient implements Client, Subject
     public void startClient() {
     }
 
-    @Override
-    public ArrayList<Product> getProduct() {
+   @Override
+    public String getProduct(String id) {
         try {
-            outToServer.writeObject(new Request("getProductList", null));
+          while(true)
+          {
+            outToServer.writeObject(new Request("getProduct", id));
+            outToServer.flush();
             Request response = (Request) inFromServer.readObject();
-            return (ArrayList<Product>) response.getArg();
+            System.out.println("getProduct: " + response.getArg().toString());
+            return  (String) response.getArg();
+          }
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -87,10 +100,20 @@ public class SocketClient implements Client, Subject
     public void reserveProduct(Product product) {
         try {
             outToServer.writeObject(new Request("ProductAdded", product));
+            outToServer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+  public void reserveProductByID(String id) {
+    try {
+      outToServer.writeObject(new Request("ProductAdded", id));
+      outToServer.flush();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
     /*
     public void moveToBasket(Request request) {
@@ -108,6 +131,48 @@ public class SocketClient implements Client, Subject
     public ArrayList<Product> getReservedProducts () {
         return shoppingcart;
     }
+    private void displayProducts(ArrayList<Product> products)
+    {
+        System.out.println("All Products:");
+        for (Product product : products)
+        {
+            System.out.println(product.getName() + " - " + product.getPrice());
+        }
+    }
+
+
+//        public void requestAllProducts() {
+//        try {
+//            outToServer.writeObject(new Request("getAllProducts", null));
+//            outToServer.flush();
+////            Request response = (Request) inFromServer.readObject();
+////            if ("allProducts".equals(response.getType())) {
+////                ArrayList<Product> allProducts = (ArrayList<Product>) response.getArg();
+////                // Do something with the list of products
+////                displayProducts(allProducts);
+////            }
+//        }
+//        catch (IOException e)
+//        {
+//          throw new RuntimeException(e);
+//        }
+//        }
+//
+    public ArrayList<Product> searchProductByID(String ID) {
+        try {
+            outToServer.writeObject(new Request("searchProductByID", ID));
+            outToServer.flush();
+            Request response = (Request) inFromServer.readObject();
+            if ("searchResults".equals(response.getType())) {
+                 return (ArrayList<Product>) response.getArg();
+
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
 
     @Override public void addListener(String eventName,
         PropertyChangeListener listener)
@@ -121,4 +186,12 @@ public class SocketClient implements Client, Subject
         support.removePropertyChangeListener(eventName, listener);
 
     }
+  private void closeResources() {
+    try {
+      if (outToServer != null) outToServer.close();
+      if (inFromServer != null) inFromServer.close();
+    } catch (IOException e) {
+      System.err.println("Error closing resources: " + e.getMessage());
+    }
+  }
 }

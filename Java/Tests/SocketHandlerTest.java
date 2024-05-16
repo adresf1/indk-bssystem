@@ -23,7 +23,7 @@ public class SocketHandlerTest {
         // Create ObjectOutputStream using the ByteArrayOutputStream
         outToClientStub = new ObjectOutputStream(outputStream);
         // Create SocketHandler with the stub ObjectOutputStream
-        socketHandler = new SocketHandler(outToClientStub);
+        //socketHandler = new SocketHandler(outToClientStub);
     }
 /*
     @Test
