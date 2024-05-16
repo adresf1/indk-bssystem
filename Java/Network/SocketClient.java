@@ -32,7 +32,7 @@ public class SocketClient implements Client, Subject
             inFromServer = new ObjectInputStream(socket.getInputStream());
             shoppingcart = new ArrayList<>();
             support = new PropertyChangeSupport(this);
-            new Thread(this::listenToServer).start();
+            //new Thread(this::listenToServer).start();
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -44,7 +44,7 @@ public class SocketClient implements Client, Subject
         this.outToServer = outToServer;
     }
 
-    private void listenToServer() {
+    /*private void listenToServer() {
         try {
            // this.outToServer.writeObject(new Request("Listener", null));
 
@@ -62,7 +62,11 @@ public class SocketClient implements Client, Subject
                   String product = (String) request.getArg();
                   System.out.println("Product received: " + product);
                  // support.firePropertyChange("handleGetAllProducts", null, product);
-                } else {
+                } else if ("searchProductByID".equals(request.getType())){
+                    System.out.println("listenToServer: searchProductByID");
+                }
+
+                else {
                   System.out.println("Request type not recognized ");
                 }
             }
@@ -72,7 +76,7 @@ public class SocketClient implements Client, Subject
           closeResources();
         }
 
-    }
+    }*/
 
     @Override
     public void startClient() {
