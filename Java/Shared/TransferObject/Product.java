@@ -162,7 +162,7 @@ public class Product implements Serializable, Stock {
         this.price = price;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(double quantity) {
         if(quantity < 0){
             throw new RuntimeException("Quantity cannot be under 0");
         }

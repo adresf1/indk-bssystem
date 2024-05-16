@@ -3,6 +3,7 @@ package Core.CustomCellFactory;
 import Shared.TransferObject.Product;
 import Shared.Util.MyDate;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -12,19 +13,32 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.awt.*;
+
 public class ProductListView{
 
     public ProductListView(ObservableList<Product> cart, StackPane sp){
+        Runnable task = () ->{
+            Platform.runLater (()-> {
+
 
         final ListView<Product> listView = new ListView<Product>(cart);
+
         listView.setCellFactory(new Callback<ListView<Product>, ListCell<Product>>() {
             @Override
             public ListCell<Product> call(ListView<Product> listView) {
+                System.out.println("call function");
                 return new ProductListCell();
+
             }
         });
 
         sp.getChildren().add(listView);
+            });
+        };
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     /*

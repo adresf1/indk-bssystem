@@ -29,6 +29,7 @@ public class ProductListCell extends ListCell<Product> {
             VBox vBox = new VBox(name, price, expirationDate);
             content = new HBox(new Label("[Graphic]"), vBox);
             content.setSpacing(20);
+            System.out.println("Constructor ProductListCell");
         }
     @Override
     protected void updateItem(Product item, boolean empty) {
@@ -38,6 +39,7 @@ public class ProductListCell extends ListCell<Product> {
             price.setText(String.format("%1$,.2f", item.getPrice()));
             expirationDate.setText(item.getExpirationDate().toString());
             setGraphic(content);
+            System.out.println("uptateditem activeted");
         } else {
             setGraphic(null);
         }

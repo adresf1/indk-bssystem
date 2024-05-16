@@ -32,7 +32,7 @@ public class SocketClient implements Client, Subject
             inFromServer = new ObjectInputStream(socket.getInputStream());
             shoppingcart = new ArrayList<>();
             support = new PropertyChangeSupport(this);
-            //new Thread(this::listenToServer).start();
+            new Thread(this::listenToServer).start();
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -44,7 +44,7 @@ public class SocketClient implements Client, Subject
         this.outToServer = outToServer;
     }
 
-    /*private void listenToServer() {
+    private void listenToServer() {
         try {
            // this.outToServer.writeObject(new Request("Listener", null));
 
@@ -62,11 +62,18 @@ public class SocketClient implements Client, Subject
                   String product = (String) request.getArg();
                   System.out.println("Product received: " + product);
                  // support.firePropertyChange("handleGetAllProducts", null, product);
-                } else if ("searchProductByID".equals(request.getType())){
+                }
+                else if ("searchProductByID".equals(request.getType())){
                     System.out.println("listenToServer: searchProductByID");
                 }
+                else if ("allProductsReturned".equals(request.getType())) {
+                    System.out.println("Entered allProductsReturned");
+                    support.firePropertyChange("allProductsReturned_event",null, request.getArg());
 
-                else {
+                } else if ("reservedProduct".equals(request.getType())) {
+                    System.out.println("entered reservedProduct");
+                    support.firePropertyChange("reservedProduct_event",null, request.getArg());
+                } else {
                   System.out.println("Request type not recognized ");
                 }
             }
@@ -76,7 +83,11 @@ public class SocketClient implements Client, Subject
           closeResources();
         }
 
-    }*/
+    }
+
+    public PropertyChangeSupport getSupport(){
+        return this.support;
+    }
 
     @Override
     public void startClient() {
@@ -145,23 +156,24 @@ public class SocketClient implements Client, Subject
     }
 
 
-//        public void requestAllProducts() {
-//        try {
-//            outToServer.writeObject(new Request("getAllProducts", null));
-//            outToServer.flush();
-////            Request response = (Request) inFromServer.readObject();
-////            if ("allProducts".equals(response.getType())) {
-////                ArrayList<Product> allProducts = (ArrayList<Product>) response.getArg();
-////                // Do something with the list of products
-////                displayProducts(allProducts);
-////            }
-//        }
-//        catch (IOException e)
-//        {
-//          throw new RuntimeException(e);
-//        }
-//        }
-//
+        public void requestAllProducts() {
+        try {
+            outToServer.writeObject(new Request("requestAllProducts", null));
+            outToServer.flush();
+        }
+        catch (IOException e)
+        {
+          throw new RuntimeException(e);
+        }
+        }
+
+    @Override
+    public void requestToReserveProduct(Product p) throws IOException {
+        outToServer.writeObject((new Request("requestToReserveProduct",p)));
+        outToServer.flush();
+
+    }
+
     public ArrayList<Product> searchProductByID(String ID) {
         try {
             outToServer.writeObject(new Request("searchProductByID", ID));

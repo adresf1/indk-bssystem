@@ -196,6 +196,51 @@ public class ProductDAOImpl implements ProductDAO
     }
   }
 
+  public static int numberOfElementsInTable(String warehouseDB, String table, String value) throws SQLException
+  {
+    try (Connection connection = getConnection(warehouseDB))
+    {
+      PreparedStatement statement = connection.prepareStatement(
+              "SELECT COUNT(*) AS count FROM " + table);
+      ResultSet resultSet = statement.executeQuery();
+      resultSet.next();
+      return resultSet.getInt("count");
+      // statement.executeUpdate();
+    }
+  }
+
+  public ArrayList<Product> getAllProducts()
+          throws SQLException{
+
+    try (Connection connection = getConnection(warehouseDB))
+    {
+      PreparedStatement statement = connection.prepareStatement(
+              "SELECT * FROM products ");
+      ResultSet resultSet = statement.executeQuery();
+      ArrayList<Product> products = new ArrayList<>();
+      while (resultSet.next())
+      {
+        String name = resultSet.getString("products_name");
+        String ID = resultSet.getString("products_id");
+        double price = resultSet.getDouble("products_price");
+        double quantity = resultSet.getDouble("products_quantity");
+        int category = resultSet.getInt("products_category");
+        String productDescription = resultSet.getString(
+                "products_productDescription");
+        String productionDate = resultSet.getString("products_productionDate");
+        String expirationDate = resultSet.getString("products_expirationDate");
+        int barcode = resultSet.getInt("products_barcode");
+        double lowStock = resultSet.getDouble("products_lowStock");
+        String unitType = resultSet.getString("products_unitType");
+
+        Product product = new Product(name, ID, category, productDescription,
+                MyDate.fromString(productionDate), MyDate.fromString(expirationDate), barcode, price, quantity,
+                lowStock, unitType);
+        products.add(product);
+      }
+      return products;
+    }
+  }
   public Product getProduct(String id)
   {
     try (Connection connection = getConnection(warehouseDB))

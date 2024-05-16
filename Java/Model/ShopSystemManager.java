@@ -5,6 +5,7 @@ import Shared.TransferObject.Product;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ShopSystemManager implements IShopSystemManager {
@@ -15,10 +16,11 @@ public class ShopSystemManager implements IShopSystemManager {
     private ShoppingCart shoppingCart;
 
     public ShopSystemManager(Client client) {
-        support = new PropertyChangeSupport(this);
+        //support = new PropertyChangeSupport(this);
         searchResult = new ArrayList<>();
         shoppingCart = new ShoppingCart();
         this.client = client;
+        support = client.getSupport();
     }
 
 
@@ -48,6 +50,21 @@ public class ShopSystemManager implements IShopSystemManager {
     @Override
     public ArrayList<Product> getAllProducts() {
         return client.searchProductByID("1");
+    }
+
+    @Override
+    public PropertyChangeSupport getSuppoert() {
+        return support;
+    }
+
+    @Override
+    public void requestAllProducts() {
+        client.requestAllProducts();
+    }
+
+    @Override
+    public void requestToReserveProduct(Product p) throws IOException {
+        client.requestToReserveProduct(p);
     }
 
     @Override

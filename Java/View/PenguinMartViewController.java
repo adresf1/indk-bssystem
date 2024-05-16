@@ -13,6 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.StackPane;
 
+import java.io.IOException;
+
 public class PenguinMartViewController implements ViewController {
 
     private PenguinMartViewModel viewModel;
@@ -60,21 +62,31 @@ public class PenguinMartViewController implements ViewController {
         category.setCellValueFactory(new PropertyValueFactory<>("Category"));
         unitType.setCellValueFactory(new PropertyValueFactory<>("UnitType"));
 
-        presentedProducts.setItems(viewModel.getAllProducts());
+       presentedProducts.setItems(viewModel.getProductList());
+       viewModel.requestAllProducts();
 
     }
 
 
     @FXML
-    public void onPressed_moveToBasket(){
+    public void onPressed_moveToBasket() throws IOException {
         if(presentedProducts.getSelectionModel().getSelectedItem() != null){
             Product p = presentedProducts.getSelectionModel().getSelectedItem();
             viewModel.moveToBasket(p);
         }
     }
 
+
+
+
+
     @FXML
     public void onPressed_getAllProducts(){
         viewModel.allProductsToStackPane();
+    }
+    @FXML
+    public void onPressed_updateAllProducts()
+    {
+        viewModel.requestAllProducts();
     }
 }

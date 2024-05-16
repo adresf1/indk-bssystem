@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +34,11 @@ public class SocketHandler implements Runnable {
 
         // Initialize the map
         requestHandlers = new HashMap<>();
-        requestHandlers.put("getProduct", this::handleGetAllProducts);
+        requestHandlers.put("getProduct", this::handleGetProducts);
         requestHandlers.put("searchProductByID", this::handleSearchProductByID);
         requestHandlers.put("ProductAdded", this::handleProductAdded);
+        requestHandlers.put("requestAllProducts", this::handleGetAllProducts);
+        requestHandlers.put("requestToReserveProduct", this::handleRequestToReserveProduct);
 
         try {
             outToClient = new ObjectOutputStream(socket.getOutputStream());
@@ -45,6 +48,9 @@ public class SocketHandler implements Runnable {
             throw new RuntimeException(e);
         }
     }
+
+
+
 
     @Override
     public void run() {
@@ -62,7 +68,7 @@ public class SocketHandler implements Runnable {
                     System.out.println("Request Type not recognized: " + requestType);
                 }
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | SQLException e) {
             System.err.println("Error listening to server: " + e.getMessage());
             e.printStackTrace();
             closeResources();
@@ -70,7 +76,7 @@ public class SocketHandler implements Runnable {
     }
 
     // Handler metode for "getAllProducts" request
-    private void handleGetAllProducts(Request request) throws IOException {
+    private void handleGetProducts(Request request) throws IOException {
         String ID = (String) request.getArg();
         Product product = productDAOImpl.getProduct(ID);
         System.out.println("Product type being sent: "+ product.getID());
@@ -94,6 +100,13 @@ public class SocketHandler implements Runnable {
         outToClient.flush();
     }
 
+    private void handleGetAllProducts(Request request) throws IOException, SQLException {
+        //Product requestedProduct = (Product) request.getArg();
+        ArrayList<Product> allProducts = productDAOImpl.getAllProducts();
+        outToClient.writeObject(new Request("allProductsReturned", allProducts));
+        outToClient.flush();
+    }
+
     // Handler metode for "ProductAdded" request
     private void handleProductAdded(Request request) throws IOException {
         Product requestedProduct = (Product) request.getArg();
@@ -101,6 +114,18 @@ public class SocketHandler implements Runnable {
         if (reservedProduct != null) {
             outToClient.writeObject(new Request("ProductAdded", reservedProduct));
             outToClient.flush();
+        }
+    }
+
+    private void handleRequestToReserveProduct(Request request) throws IOException, SQLException {
+        Product requestedProductToReserve = (Product) request.getArg();
+        Product productDB = productDAOImpl.getProduct(requestedProductToReserve.getID());
+        productDB.setQuantity(productDB.getQuantity() - requestedProductToReserve.getQuantity());
+        productDAOImpl.update(productDB);
+        if (requestedProductToReserve != null){
+            outToClient.writeObject(new Request("reservedProduct",requestedProductToReserve));
+            outToClient.flush();
+
         }
     }
     private void closeResources() {
@@ -124,6 +149,8 @@ public class SocketHandler implements Runnable {
 
     // Functional interface for request handlers
     private interface RequestHandler {
-        void handle(Request request) throws IOException;
+        void handle(Request request) throws IOException, SQLException;
     }
+
+
 }
