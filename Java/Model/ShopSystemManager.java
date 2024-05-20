@@ -73,6 +73,11 @@ public class ShopSystemManager implements IShopSystemManager {
     }
 
     @Override
+    public void requestRemoveProduct(Product product) throws IOException {
+        client.requestRemoveProduct(product);
+    }
+
+    @Override
     public void addListener(String eventName, PropertyChangeListener listener) {
         support.addPropertyChangeListener(eventName, listener);
     }

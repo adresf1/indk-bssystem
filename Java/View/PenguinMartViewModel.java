@@ -31,7 +31,9 @@ public class PenguinMartViewModel {
         productList = FXCollections.observableList(new ArrayList<Product>());
         support.addPropertyChangeListener("allProductsReturned_event",this::handleAllProducts);
         support.addPropertyChangeListener("reservedProduct_event",this::handleReservedProducts);
+        support.addPropertyChangeListener("removedProduct_event", this::handleRemovedProduct);
     }
+
 
 
     private void handleAllProducts(PropertyChangeEvent propertyChangeEvent) {
@@ -48,6 +50,14 @@ public class PenguinMartViewModel {
         shoppingCart.add(productReserved);
         support.firePropertyChange("updateStackpaneItems",null,null);
         support.firePropertyChange("refreshTableView",null,null);
+    }
+    private void handleRemovedProduct(PropertyChangeEvent propertyChangeEvent) {
+        System.out.println("Entered event handler: handleRemovedProduct");
+        Product productRemoved = (Product)propertyChangeEvent.getNewValue();
+        shoppingCart.removeIf(product -> productRemoved.getID().equals(product.getID()));
+        System.out.println(shoppingCart.size());
+        support.firePropertyChange("updateStackpaneItems",null,null);
+
     }
 
     public void moveToBasket(Product p) throws IOException {
@@ -93,6 +103,9 @@ public class PenguinMartViewModel {
             tempP.add(temp);
         }
         shopSystemManager.requestBuyProducts(tempP);
+    }
+    public void requestRemoveProduct(Product product) throws IOException {
+        shopSystemManager.requestRemoveProduct(product);
     }
 
     public PropertyChangeSupport getSupport()

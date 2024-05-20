@@ -27,7 +27,7 @@
                               <Insets left="30.0" top="50.0" />
                            </HBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" text="Fjern fra kurv">
+                        <Button mnemonicParsing="false" onAction="#onPressed_removeItem" text="Fjern fra kurv">
                            <HBox.margin>
                               <Insets left="100.0" top="50.0" />
                            </HBox.margin>

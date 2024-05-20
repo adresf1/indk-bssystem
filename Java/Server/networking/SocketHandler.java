@@ -40,6 +40,7 @@ public class SocketHandler implements Runnable {
         requestHandlers.put("requestAllProducts", this::handleGetAllProducts);
         requestHandlers.put("requestToReserveProduct", this::handleRequestToReserveProduct);
         requestHandlers.put("requestToBuyAllProducts", this::handleBuyAllProducts);
+        requestHandlers.put("requestToRemoveProduct", this::handleRemoveProduct);
 
         try {
             outToClient = new ObjectOutputStream(socket.getOutputStream());
@@ -49,7 +50,6 @@ public class SocketHandler implements Runnable {
             throw new RuntimeException(e);
         }
     }
-
 
 
     @Override
@@ -137,6 +137,19 @@ public class SocketHandler implements Runnable {
         outToClient.writeObject(new Request("boughtProducts",requestToBuyAllProducts));
         outToClient.flush();
     }
+
+    private void handleRemoveProduct(Request request) throws SQLException, IOException {
+        Product requestedProductToRemove = (Product) request.getArg();
+        Product productDB = productDAOImpl.getProduct(requestedProductToRemove.getID());
+        productDB.setQuantity(productDB.getQuantity() + requestedProductToRemove.getQuantity());
+        productDAOImpl.update(productDB);
+        //TODO: Handle if delete throws SQL-error
+        outToClient.writeObject(new Request("removedProduct",requestedProductToRemove));
+        Request updateAllItems = new Request("allProductsReturned", productDAOImpl.getAllProducts());
+        outToClient.writeObject(updateAllItems);
+        outToClient.flush();
+    }
+
     private void closeResources() {
         try {
             if (outToClient != null) outToClient.close();

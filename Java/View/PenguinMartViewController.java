@@ -9,6 +9,7 @@ import Shared.TransferObject.Product;
 import Shared.Util.MyDate;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -16,6 +17,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -63,7 +65,7 @@ public class PenguinMartViewController implements ViewController {
     private HBox messageInfoBox;
     private VBox cartContainer;
 
-
+    private String itemToRemove;
 
     @Override
     public void init(ViewHandler vh, ViewModelFactory vmf) {
@@ -110,9 +112,16 @@ public class PenguinMartViewController implements ViewController {
             for (Product product : viewModel.getShoppingCart())
             {
                 ProductListCell cell = new ProductListCell(product);
+                cell.getElement().setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        itemToRemove = cell.getID();
+                        System.out.println("This item is going to be removed: " + itemToRemove);
+                    }
+                });
+
                 cartContainer.getChildren().add(cell.getElement());
             }
-
             System.out.println("updateShoppingcart");
         });
     }
@@ -148,6 +157,15 @@ public class PenguinMartViewController implements ViewController {
         });
     }
 
+
+    public void onPressed_removeItem(ActionEvent actionEvent) throws IOException {
+        for (Product product: viewModel.getShoppingCart()) {
+            if (product.getID().equals(itemToRemove)){
+                viewModel.requestRemoveProduct(product);
+            }
+        }
+    }
+
     @FXML
     public void onPressed_getAllProducts(){
         viewModel.allProductsToStackPane();
@@ -170,4 +188,5 @@ public class PenguinMartViewController implements ViewController {
         viewModel.getShoppingCart().clear();
         viewModel.getSupport().firePropertyChange("updateStackpaneItems",null,null);
     }
+
 }
