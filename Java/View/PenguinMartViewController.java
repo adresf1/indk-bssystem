@@ -1,19 +1,29 @@
 package View;
 
+import Core.CustomCellFactory.ProductListCell;
 import Core.CustomCellFactory.ProductListView;
 import Core.ViewController;
 import Core.ViewHandler;
 import Core.ViewModelFactory;
 import Shared.TransferObject.Product;
 import Shared.Util.MyDate;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
+import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class PenguinMartViewController implements ViewController {
 
@@ -49,11 +59,17 @@ public class PenguinMartViewController implements ViewController {
     @FXML
     private TextField UsernameTextfield;
 
+    @FXML
+    private HBox messageInfoBox;
+    private VBox cartContainer;
+
+
+
     @Override
     public void init(ViewHandler vh, ViewModelFactory vmf) {
         this.vh = vh;
         this.viewModel=vmf.getPenguinMartVM();
-        this.plv= new ProductListView(viewModel.getShoppingCart(),shoppingCartFX);
+       // this.plv= new ProductListView(viewModel.getShoppingCart(),shoppingCartFX);
         name.setCellValueFactory(new PropertyValueFactory<>("Name"));
         price.setCellValueFactory(new PropertyValueFactory<>("Price"));
         quantity.setCellValueFactory(new PropertyValueFactory<>("Quantity"));
@@ -62,11 +78,44 @@ public class PenguinMartViewController implements ViewController {
         category.setCellValueFactory(new PropertyValueFactory<>("Category"));
         unitType.setCellValueFactory(new PropertyValueFactory<>("UnitType"));
 
-       presentedProducts.setItems(viewModel.getProductList());
-       viewModel.requestAllProducts();
+        name.setSortType(TableColumn.SortType.ASCENDING);
+        presentedProducts.getSortOrder().add(name);
+        presentedProducts.sort();
 
+        presentedProducts.setItems(viewModel.getProductList());
+        viewModel.requestAllProducts();
+        viewModel.getSupport().addPropertyChangeListener("updateStackpaneItems",this::updateShoppingcart );
+        viewModel.getSupport().addPropertyChangeListener("refreshTableView",this::refreshTableView );
+        viewModel.getSupport().addPropertyChangeListener("allProductsBought_event", this::handleAllProductsBought);
+
+        // Initialize VBox for stacking items
+
+        cartContainer = new VBox();
+        shoppingCartFX.getChildren().add(cartContainer);
     }
 
+    private void refreshTableView(PropertyChangeEvent propertyChangeEvent) {
+        Platform.runLater(() -> {
+            presentedProducts.sort();
+            System.out.println("Refreshing table");
+        });
+    }
+
+    public void updateShoppingcart(PropertyChangeEvent propertyChangeEvent)
+    {
+        Platform.runLater(() -> {
+            cartContainer.getChildren().clear(); // Clear existing children
+
+            // Fetch products from the shopping cart
+            for (Product product : viewModel.getShoppingCart())
+            {
+                ProductListCell cell = new ProductListCell(product);
+                cartContainer.getChildren().add(cell.getElement());
+            }
+
+            System.out.println("updateShoppingcart");
+        });
+    }
 
     @FXML
     public void onPressed_moveToBasket() throws IOException {
@@ -76,9 +125,28 @@ public class PenguinMartViewController implements ViewController {
         }
     }
 
+    @FXML
+    public void onPressed_checkOutBasket(ActionEvent actionEvent) throws IOException {
+        double totalprice = 0, quantity = 0;
+        for (Product product: viewModel.getShoppingCart())
+        {
+        totalprice += (product.getPrice()*product.getQuantity());
+        quantity+=product.getQuantity();
+        }
+        System.out.println("Total price: " + totalprice);
+        System.out.println("Total quantity: " + quantity);
+        viewModel.requestBuyProducts();
+    }
 
-
-
+    private void addDynamicLabel(String message) {
+        Platform.runLater(() -> {
+            messageInfoBox.getChildren().clear();
+            // Create a new Label
+            Label label = new Label(message);
+            // Add the label to the children of the HBox
+            messageInfoBox.getChildren().add(label);
+        });
+    }
 
     @FXML
     public void onPressed_getAllProducts(){
@@ -88,5 +156,18 @@ public class PenguinMartViewController implements ViewController {
     public void onPressed_updateAllProducts()
     {
         viewModel.requestAllProducts();
+    }
+
+    private void handleAllProductsBought(PropertyChangeEvent propertyChangeEvent) {
+        System.out.println("Enters event handler : handleAllProductsBought");
+        double totalprice = 0;
+        for (Product product: (ArrayList<Product>) propertyChangeEvent.getNewValue())
+        {
+            System.out.println("I'm in the for loop");
+            totalprice += (product.getPrice()*product.getQuantity());
+        }
+        addDynamicLabel("Your total price is: " + totalprice);
+        viewModel.getShoppingCart().clear();
+        viewModel.getSupport().firePropertyChange("updateStackpaneItems",null,null);
     }
 }

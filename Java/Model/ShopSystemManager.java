@@ -68,6 +68,11 @@ public class ShopSystemManager implements IShopSystemManager {
     }
 
     @Override
+    public void requestBuyProducts(ArrayList<Product> products) throws IOException {
+        client.requestBuyAllProducts(products);
+    }
+
+    @Override
     public void addListener(String eventName, PropertyChangeListener listener) {
         support.addPropertyChangeListener(eventName, listener);
     }

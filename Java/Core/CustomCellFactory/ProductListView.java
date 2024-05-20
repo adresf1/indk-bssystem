@@ -17,29 +17,28 @@ import java.awt.*;
 
 public class ProductListView{
 
-    public ProductListView(ObservableList<Product> cart, StackPane sp){
-        Runnable task = () ->{
-            Platform.runLater (()-> {
-
-
-        final ListView<Product> listView = new ListView<Product>(cart);
-
-        listView.setCellFactory(new Callback<ListView<Product>, ListCell<Product>>() {
-            @Override
-            public ListCell<Product> call(ListView<Product> listView) {
-                System.out.println("call function");
-                return new ProductListCell();
-
-            }
-        });
-
-        sp.getChildren().add(listView);
-            });
-        };
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
-    }
+//    public ProductListView(ObservableList<Product> cart, StackPane sp){
+//        Runnable task = () ->{
+//            Platform.runLater (()-> {
+//
+//
+//        final ListView<Product> listView = new ListView<Product>(cart);
+//
+//        listView.setCellFactory(new Callback<ListView<Product>, ListCell<Product>>() {
+//            @Override
+//            public ListCell<Product> call(ListView<Product> listView) {
+//                System.out.println("call function");
+//                return new ProductListCell();
+//
+//            }
+//        });
+//
+//            });
+//        };
+//        Thread thread = new Thread(task);
+//        thread.setDaemon(true);
+//        thread.start();
+//    }
 
     /*
     //private Product product;

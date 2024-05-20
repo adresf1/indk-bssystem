@@ -39,6 +39,7 @@ public class SocketHandler implements Runnable {
         requestHandlers.put("ProductAdded", this::handleProductAdded);
         requestHandlers.put("requestAllProducts", this::handleGetAllProducts);
         requestHandlers.put("requestToReserveProduct", this::handleRequestToReserveProduct);
+        requestHandlers.put("requestToBuyAllProducts", this::handleBuyAllProducts);
 
         try {
             outToClient = new ObjectOutputStream(socket.getOutputStream());
@@ -48,7 +49,6 @@ public class SocketHandler implements Runnable {
             throw new RuntimeException(e);
         }
     }
-
 
 
 
@@ -127,6 +127,15 @@ public class SocketHandler implements Runnable {
             outToClient.flush();
 
         }
+        Request updateAllItems = new Request("allProductsReturned", productDAOImpl.getAllProducts());
+        outToClient.writeObject(updateAllItems);
+    }
+
+    private void handleBuyAllProducts(Request request) throws IOException {
+        ArrayList<Product> requestToBuyAllProducts = (ArrayList<Product>) request.getArg();
+        System.out.println("Products have been bought");
+        outToClient.writeObject(new Request("boughtProducts",requestToBuyAllProducts));
+        outToClient.flush();
     }
     private void closeResources() {
         try {

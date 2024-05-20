@@ -313,4 +313,10 @@ public class Product implements Serializable, Stock {
     public void editExpirationDate(MyDate newDate) {
         this.expirationDate = newDate;
     }
+
+    public Product copy(){
+
+        return new Product(this.name,this.ID, this.category, this.productDescription, this.productionDate,
+                this.expirationDate, this.barcode, this.price, this.quantity, this.lowStock, this.unitType);
+    }
 }

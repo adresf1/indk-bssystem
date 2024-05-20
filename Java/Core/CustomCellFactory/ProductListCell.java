@@ -8,41 +8,48 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-public class ProductListCell extends ListCell<Product> {
-        private HBox content;
-        private Image productImage;
-        private Text description;
-        private Text name;
-        private Text price;
-        private Text quantity;
-        private Text expirationDate;
+public class ProductListCell {
+    private HBox content;
+    private Image productImage;
+    private Text description;
+    private Text name;
+    private Text price;
+    private Text quantity;
+    private Text expirationDate;
 
-        private Text unitType;
-        private Text totalPrice;
+    private Text unitType;
+    private Text totalPrice;
 
 
-        public ProductListCell() {
-            super();
-            name = new Text();
-            price = new Text();
-            expirationDate = new Text();
-            VBox vBox = new VBox(name, price, expirationDate);
-            content = new HBox(new Label("[Graphic]"), vBox);
-            content.setSpacing(20);
-            System.out.println("Constructor ProductListCell");
-        }
-    @Override
-    protected void updateItem(Product item, boolean empty) {
-        super.updateItem(item, empty);
+    public ProductListCell(Product product) {
+        name = new Text();
+        price = new Text();
+        expirationDate = new Text();
+        VBox vBox = new VBox(name, price, expirationDate);
+        content = new HBox(new Label("[Graphic]"), vBox);
+        content.setSpacing(20);
+
+        System.out.println("Constructor ProductListCell");
+
+        name.setText(product.getName());
+        price.setText(String.format("%1$,.2f", product.getPrice()));
+        expirationDate.setText(product.getExpirationDate().toString());
+    }
+
+
+    public HBox getElement()
+    {
+        return content;
+    }
+
+    public void updateItem(Product item, boolean empty) {
         if (item != null && !empty) { // <== test for null item and empty parameter
             name.setText(item.getName());
             price.setText(String.format("%1$,.2f", item.getPrice()));
             expirationDate.setText(item.getExpirationDate().toString());
-            setGraphic(content);
-            System.out.println("uptateditem activeted");
-        } else {
-            setGraphic(null);
+            System.out.println("updatedItem activated");
         }
+
     }
 
 }

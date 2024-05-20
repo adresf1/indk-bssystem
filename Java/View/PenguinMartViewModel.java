@@ -26,26 +26,19 @@ public class PenguinMartViewModel {
         support = shopSystemManager.getSuppoert();
         this.username = new SimpleStringProperty();
         this.textinput = new SimpleStringProperty();
-        shopSystemManager.addListener("GlobalChatUpdate", this::onUpdateGlobalChat);
+
         shoppingCart = FXCollections.observableList(new ArrayList<Product>());
         productList = FXCollections.observableList(new ArrayList<Product>());
         support.addPropertyChangeListener("allProductsReturned_event",this::handleAllProducts);
         support.addPropertyChangeListener("reservedProduct_event",this::handleReservedProducts);
-
     }
-
 
 
     private void handleAllProducts(PropertyChangeEvent propertyChangeEvent) {
         System.out.println("Entered event handler: handleAllProducts");
-        ArrayList<Product> newProductList = (ArrayList<Product>)propertyChangeEvent.getNewValue();
-        productList.clear();
-        for (Product product : newProductList)
-        {
-            productList.add(product);
-        }
-        support.firePropertyChange("refreshTableView",null,null);
-
+        ArrayList<Product> newProductList = (ArrayList<Product>) propertyChangeEvent.getNewValue();
+        productList.setAll(newProductList);  // Update the list
+        support.firePropertyChange("refreshTableView", null, null);
     }
 
     private void handleReservedProducts(PropertyChangeEvent propertyChangeEvent) {
@@ -53,24 +46,14 @@ public class PenguinMartViewModel {
         Product productReserved = (Product)propertyChangeEvent.getNewValue();
         System.out.println(productReserved + " !!!!!! ");
         shoppingCart.add(productReserved);
-
-    }
-
-
-    private void onUpdateGlobalChat(PropertyChangeEvent propertyChangeEvent) {
-    /*
-        ArrayList<Product> newGlobalChat = (ArrayList<Product>)propertyChangeEvent.getNewValue();
-        globalChat = FXCollections.observableArrayList(newGlobalChat);
-        for (int i = 0; i < newGlobalChat.size(); i++) {
-            System.out.println(newGlobalChat.get(i).getProduct());
-        }
-    */
-
+        support.firePropertyChange("updateStackpaneItems",null,null);
+        support.firePropertyChange("refreshTableView",null,null);
     }
 
     public void moveToBasket(Product p) throws IOException {
-        p.setQuantity(1.0);
-        shopSystemManager.requestToReserveProduct(p);
+        Product temp = p.copy();
+        temp.setQuantity(1);
+        shopSystemManager.requestToReserveProduct(temp);
     }
 
     public void allProductsToStackPane(){
@@ -102,6 +85,14 @@ public class PenguinMartViewModel {
     public void requestAllProducts()
     {
         shopSystemManager.requestAllProducts();
+    }
+
+    public void requestBuyProducts() throws IOException {
+        ArrayList<Product> tempP = new ArrayList<>();
+        for (Product temp : shoppingCart) {
+            tempP.add(temp);
+        }
+        shopSystemManager.requestBuyProducts(tempP);
     }
 
     public PropertyChangeSupport getSupport()

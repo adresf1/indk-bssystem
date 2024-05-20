@@ -73,6 +73,9 @@ public class SocketClient implements Client, Subject
                 } else if ("reservedProduct".equals(request.getType())) {
                     System.out.println("entered reservedProduct");
                     support.firePropertyChange("reservedProduct_event",null, request.getArg());
+                } else if ("boughtProducts".equals(request.getType())) {
+                    System.out.println("Entered boughtProducts");
+                    support.firePropertyChange("allProductsBought_event",null, request.getArg());
                 } else {
                   System.out.println("Request type not recognized ");
                 }
@@ -172,6 +175,12 @@ public class SocketClient implements Client, Subject
         outToServer.writeObject((new Request("requestToReserveProduct",p)));
         outToServer.flush();
 
+    }
+
+    @Override
+    public void requestBuyAllProducts(ArrayList<Product> products) throws IOException {
+        outToServer.writeObject(new Request("requestToBuyAllProducts", products));
+        outToServer.flush();
     }
 
     public ArrayList<Product> searchProductByID(String ID) {

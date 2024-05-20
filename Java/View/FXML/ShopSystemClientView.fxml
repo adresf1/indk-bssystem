@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.PenguinMartViewController">
+<AnchorPane prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.PenguinMartViewController">
    <children>
       <BorderPane layoutX="-1.0" layoutY="1.0" prefHeight="400.0" prefWidth="594.0">
          <right>
@@ -13,11 +20,25 @@
          <top>
             <HBox prefHeight="100.0" prefWidth="347.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onPressed_moveToBasket" text="Tilføj til Kurve">
-                     <HBox.margin>
-                        <Insets left="150.0" top="50.0" />
-                     </HBox.margin>
-                  </Button>
+                  <HBox prefHeight="100.0" prefWidth="605.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#onPressed_moveToBasket" text="Tilføj til Kurve">
+                           <HBox.margin>
+                              <Insets left="30.0" top="50.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" text="Fjern fra kurv">
+                           <HBox.margin>
+                              <Insets left="100.0" top="50.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#onPressed_checkOutBasket" text="Køb">
+                           <HBox.margin>
+                              <Insets left="100.0" top="50.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
             </HBox>
          </top>
@@ -30,13 +51,13 @@
                            <children>
                               <TableView fx:id="presentedProducts" layoutX="2.0" layoutY="-2.0" prefHeight="270.0" prefWidth="421.0">
                                 <columns>
-                                  <TableColumn prefWidth="63.333338499069214" text="Name" fx:id="name"/>
-                                    <TableColumn prefWidth="58.66668701171875" text="Price" fx:id="price" />
-                                    <TableColumn prefWidth="55.999961853027344" text="Quantity" fx:id="quantity"/>
-                                    <TableColumn prefWidth="67.3333740234375" text="ExpirationDate" fx:id="expirationDate"/>
-                                    <TableColumn prefWidth="38.00007629394531" text="Barcode" fx:id="barcode"/>
-                                    <TableColumn prefWidth="58.66668701171875" text="Category" fx:id="category" />
-                                    <TableColumn prefWidth="76.0" text="UnitType" fx:id="unitType"/>
+                                  <TableColumn fx:id="name" prefWidth="63.333338499069214" text="Name" />
+                                    <TableColumn fx:id="price" prefWidth="58.66668701171875" text="Price" />
+                                    <TableColumn fx:id="quantity" prefWidth="55.999961853027344" text="Quantity" />
+                                    <TableColumn fx:id="expirationDate" prefWidth="67.3333740234375" text="ExpirationDate" />
+                                    <TableColumn fx:id="barcode" prefWidth="38.00007629394531" text="Barcode" />
+                                    <TableColumn fx:id="category" prefWidth="58.66668701171875" text="Category" />
+                                    <TableColumn fx:id="unitType" prefWidth="76.0" text="UnitType" />
                                 </columns>
                               </TableView>
                            </children>
@@ -47,5 +68,6 @@
             </TabPane>
          </left>
       </BorderPane>
+       <HBox fx:id="messageInfoBox" layoutY="398.0" prefHeight="53.0" prefWidth="424.0" />
    </children>
 </AnchorPane>

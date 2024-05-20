@@ -23,4 +23,6 @@ public interface IShopSystemManager extends Subject {
     void requestAllProducts();
 
     void requestToReserveProduct(Product p) throws IOException;
+
+    void requestBuyProducts(ArrayList<Product> products) throws IOException;
 }

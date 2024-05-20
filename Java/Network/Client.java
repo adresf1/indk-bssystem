@@ -20,4 +20,6 @@ public interface Client {
     void requestAllProducts();
 
     void requestToReserveProduct(Product p) throws IOException;
+
+    void requestBuyAllProducts(ArrayList<Product> products) throws IOException;
 }
