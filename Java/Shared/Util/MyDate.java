@@ -73,7 +73,6 @@ public class MyDate implements Serializable {
             if (strArr.length !=3 ){
                throw new IllegalArgumentException("Wrong format for date, correct format for date is DD/MM/YYYY");
             }
-            //System.out.println("strArr: " + Arrays.toString(strArr));
             convertedDate.set(
                     Integer.parseInt(strArr[0]),
                     Integer.parseInt(strArr[1]),
@@ -83,42 +82,6 @@ public class MyDate implements Serializable {
         }
 
         return convertedDate;
-    }
-
-    public String getMonthName(){
-        return switch (month) {
-            case 1 -> "January";
-            case 2 -> "February";
-            case 3 -> "March";
-            case 4 -> "April";
-            case 5 -> "May";
-            case 6 -> "June";
-            case 7 -> "July";
-            case 8 -> "August";
-            case 9 -> "September";
-            case 10 -> "October";
-            case 11 -> "November";
-            case 12 -> "December";
-            default -> "None";
-        };
-    }
-
-    public int getMonthName(String month){
-        return switch (month.toLowerCase()) {
-            case "january" ->1;
-            case "february" ->2;
-            case "march" ->3;
-            case "april" ->4;
-            case "may" ->5;
-            case "june"->6;
-            case "july"->7;
-            case "august"->8;
-            case "september"->9;
-            case "october"->10;
-            case "november"->11;
-            case "december"-> 12;
-            default -> 0;
-        };
     }
 
 
@@ -156,11 +119,6 @@ public class MyDate implements Serializable {
                 this.year--;
             }
             this.day = this.numberOfDaysInMonth();
-        }
-    }
-    public void stepBackward(int days){
-        for (int i = 0; i < days; i++) {
-            this.stepBackwardOneDay();
         }
     }
     public void stepForwardOneDay(){
@@ -203,41 +161,6 @@ public class MyDate implements Serializable {
         }
         return false;
     }
-
-    public int yearsBetween(MyDate other){
-        int tempdelta=0;
-        int tempYear=0;
-
-        tempdelta = other.year - this.year;
-        if(tempdelta==0){
-            return 0;
-        }
-        else if(tempdelta>0) {
-            tempYear=this.year;
-            this.year = other.year;
-            if(this.isBefore(other)||this.equals(other)){
-                this.year=tempYear;
-                return tempdelta;
-            }
-            else{
-                this.year=tempYear;
-                return (tempdelta-1);
-            }
-        }
-        else{
-            tempYear=this.year;
-            this.year = other.year;
-            if(other.isBefore(this)||this.equals(other)){
-                this.year=tempYear;
-                return tempdelta*-1;
-            }
-            else{
-                this.year=tempYear;
-                return (tempdelta*-1)-1;
-            }
-        }
-    }
-
 
     public MyDate copy(){
         return new MyDate(this.month, this.day,this.year);
@@ -287,8 +210,4 @@ public class MyDate implements Serializable {
         return this.day - other.day; // Returns a positive or negative number for the day comparison
 
     }
-    public static MyDate now(){
-        return new MyDate();
-    }
-
 }

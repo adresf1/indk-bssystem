@@ -45,8 +45,4 @@ public class ViewHandler {
         ctrl.init(this, vmf);
         return root;
     }
-
-    public void openLog(){
-
-    }
 }

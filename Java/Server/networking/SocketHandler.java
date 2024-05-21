@@ -32,7 +32,7 @@ public class SocketHandler implements Runnable {
         this.connectionPool = connectionPool;
         this.productDAOImpl = productDAOImpl;
 
-        // Initialize the map
+        // Initialize the maps
         requestHandlers = new HashMap<>();
         requestHandlers.put("getProduct", this::handleGetProducts);
         requestHandlers.put("searchProductByID", this::handleSearchProductByID);
@@ -51,7 +51,6 @@ public class SocketHandler implements Runnable {
         }
     }
 
-
     @Override
     public void run() {
         try {
@@ -60,22 +59,19 @@ public class SocketHandler implements Runnable {
                 System.out.println("SocketHandler Run received request" + request.getType());
                 String requestType = request.getType();
                 RequestHandler handler = requestHandlers.get(requestType);
-                if (handler != null)
-                {
+                if (handler != null) {
                     handler.handle(request);
-                }
-                else {
+                } else {
                     System.out.println("Request Type not recognized: " + requestType);
                 }
             }
         } catch (IOException | ClassNotFoundException | SQLException e) {
             System.err.println("Error listening to server: " + e.getMessage());
             e.printStackTrace();
-            closeResources();
         }
     }
 
-    // Handler metode for "getAllProducts" request
+    // Handler metode for "getProducts" request
     private void handleGetProducts(Request request) throws IOException {
         String ID = (String) request.getArg();
         Product product = productDAOImpl.getProduct(ID);
@@ -101,7 +97,6 @@ public class SocketHandler implements Runnable {
     }
 
     private void handleGetAllProducts(Request request) throws IOException, SQLException {
-        //Product requestedProduct = (Product) request.getArg();
         ArrayList<Product> allProducts = productDAOImpl.getAllProducts();
         outToClient.writeObject(new Request("allProductsReturned", allProducts));
         outToClient.flush();
@@ -150,20 +145,9 @@ public class SocketHandler implements Runnable {
         outToClient.flush();
     }
 
-    private void closeResources() {
-        try {
-            if (outToClient != null) outToClient.close();
-            if (inFromClient != null) inFromClient.close();
-            if (socket != null) socket.close();
-        } catch (IOException e) {
-            System.err.println("Error closing resources: " + e.getMessage());
-        }
-    }
-
     public void sendRequest(Request request) {
         try {
             outToClient.writeObject(request);
-            //outToClient.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -173,6 +157,4 @@ public class SocketHandler implements Runnable {
     private interface RequestHandler {
         void handle(Request request) throws IOException, SQLException;
     }
-
-
 }

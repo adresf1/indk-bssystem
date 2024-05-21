@@ -46,22 +46,18 @@ public class SocketClient implements Client, Subject
 
     private void listenToServer() {
         try {
-           // this.outToServer.writeObject(new Request("Listener", null));
-
             while(true){
                 System.out.println("Entering while loop");
                 Request request = (Request) this.inFromServer.readObject();
                 System.out.println("Listen to server request from server " + request.getType());
                 if ("ProductAdded".equals(request.getType())){
                     Product reservedProduct = (Product) request.getArg();
-                    //shoppingcart.add(reservedProduct); // Add to cart
                     support.firePropertyChange("ProductAdded", null, reservedProduct); // Notify listeners
                     System.out.println("Confirmation received from server");
                 }
                 else if ("getProduct".equals(request.getType())) {
                   String product = (String) request.getArg();
                   System.out.println("Product received: " + product);
-                 // support.firePropertyChange("handleGetAllProducts", null, product);
                 }
                 else if ("searchProductByID".equals(request.getType())){
                     System.out.println("listenToServer: searchProductByID");
@@ -69,14 +65,16 @@ public class SocketClient implements Client, Subject
                 else if ("allProductsReturned".equals(request.getType())) {
                     System.out.println("Entered allProductsReturned");
                     support.firePropertyChange("allProductsReturned_event",null, request.getArg());
-
-                } else if ("reservedProduct".equals(request.getType())) {
+                }
+                else if ("reservedProduct".equals(request.getType())) {
                     System.out.println("entered reservedProduct");
                     support.firePropertyChange("reservedProduct_event",null, request.getArg());
-                } else if ("boughtProducts".equals(request.getType())) {
+                }
+                else if ("boughtProducts".equals(request.getType())) {
                     System.out.println("Entered boughtProducts");
                     support.firePropertyChange("allProductsBought_event",null, request.getArg());
-                } else if ("removedProduct".equals(request.getType())) {
+                }
+                else if ("removedProduct".equals(request.getType())) {
                     System.out.println("Entered removedProduct");
                     support.firePropertyChange("removedProduct_event", null, request.getArg());
                 } else {
@@ -86,7 +84,6 @@ public class SocketClient implements Client, Subject
         } catch (IOException|ClassNotFoundException e) {
           System.err.println("Error listening to server: " + e.getMessage());
           e.printStackTrace();
-          closeResources();
         }
 
     }
@@ -136,31 +133,10 @@ public class SocketClient implements Client, Subject
     }
   }
 
-    /*
-    public void moveToBasket(Request request) {
-        if (request.getArg() instanceof Product) {
-            Product product = (Product) request.getArg();
-            shoppingcart.add(product);
-            support.firePropertyChange("ProductAdded", null, product); //
-        } else {
-            throw new RuntimeException("request.getArg returned null with expected type being product");
-        }
-    }
-    */
-
     @Override
     public ArrayList<Product> getReservedProducts () {
         return shoppingcart;
     }
-    private void displayProducts(ArrayList<Product> products)
-    {
-        System.out.println("All Products:");
-        for (Product product : products)
-        {
-            System.out.println(product.getName() + " - " + product.getPrice());
-        }
-    }
-
 
         public void requestAllProducts() {
         try {
@@ -171,13 +147,12 @@ public class SocketClient implements Client, Subject
         {
           throw new RuntimeException(e);
         }
-        }
+    }
 
     @Override
     public void requestToReserveProduct(Product p) throws IOException {
         outToServer.writeObject((new Request("requestToReserveProduct",p)));
         outToServer.flush();
-
     }
 
     @Override
@@ -207,7 +182,6 @@ public class SocketClient implements Client, Subject
         return null;
     }
 
-
     @Override public void addListener(String eventName,
         PropertyChangeListener listener)
     {
@@ -220,12 +194,4 @@ public class SocketClient implements Client, Subject
         support.removePropertyChangeListener(eventName, listener);
 
     }
-  private void closeResources() {
-    try {
-      if (outToServer != null) outToServer.close();
-      if (inFromServer != null) inFromServer.close();
-    } catch (IOException e) {
-      System.err.println("Error closing resources: " + e.getMessage());
-    }
-  }
 }

@@ -17,7 +17,4 @@ public class ViewModelFactory {
         }
         return penguinMartViewModel;
     }
-
-    //TODO: error might be in mf.getPenguinMartModel
-
 }

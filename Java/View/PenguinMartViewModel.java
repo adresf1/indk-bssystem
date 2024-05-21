@@ -51,13 +51,13 @@ public class PenguinMartViewModel {
         support.firePropertyChange("updateStackpaneItems",null,null);
         support.firePropertyChange("refreshTableView",null,null);
     }
+
     private void handleRemovedProduct(PropertyChangeEvent propertyChangeEvent) {
         System.out.println("Entered event handler: handleRemovedProduct");
         Product productRemoved = (Product)propertyChangeEvent.getNewValue();
         shoppingCart.removeIf(product -> productRemoved.getID().equals(product.getID()));
         System.out.println(shoppingCart.size());
         support.firePropertyChange("updateStackpaneItems",null,null);
-
     }
 
     public void moveToBasket(Product p) throws IOException {
@@ -75,13 +75,6 @@ public class PenguinMartViewModel {
     public ObservableList<Product> getProductList()
     {
         return productList;
-    }
-    //UsernameTextfield
-    public StringProperty ProductProperty() {
-        return textinput;
-    }
-    public StringProperty usernameProperty() {
-        return username;
     }
 
     public ObservableList<Product> getShoppingCart() {

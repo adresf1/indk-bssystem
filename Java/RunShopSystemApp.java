@@ -10,16 +10,5 @@ public class RunShopSystemApp {
     public static void main(String[] args)
     {
         Application.launch(ShopSystemApp.class);
-
-/*
-        SocketClient client = new SocketClient();
-        ShoppingCart shoppingCart = new ShoppingCart();
-        MyDate MyDate = new MyDate(4,5,2024);
-        client.reserveProduct(new Product("name", "1",2, "Iiii", MyDate, MyDate,
-                2, 1.2, 4.4, 1.5, "Hej"));
-        client.addListener("ProductAdded", shoppingCart);
-        client.startClient();
-
- */
     }
 }

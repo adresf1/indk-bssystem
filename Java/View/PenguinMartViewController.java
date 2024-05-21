@@ -1,7 +1,6 @@
 package View;
 
 import Core.CustomCellFactory.ProductListCell;
-import Core.CustomCellFactory.ProductListView;
 import Core.ViewController;
 import Core.ViewHandler;
 import Core.ViewModelFactory;
@@ -11,7 +10,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -21,7 +19,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
@@ -31,8 +28,6 @@ public class PenguinMartViewController implements ViewController {
 
     private PenguinMartViewModel viewModel;
     private ViewHandler vh;
-
-    private ProductListView plv;
 
     @FXML
     private TableView<Product> presentedProducts;
@@ -166,16 +161,6 @@ public class PenguinMartViewController implements ViewController {
         }
     }
 
-    @FXML
-    public void onPressed_getAllProducts(){
-        viewModel.allProductsToStackPane();
-    }
-    @FXML
-    public void onPressed_updateAllProducts()
-    {
-        viewModel.requestAllProducts();
-    }
-
     private void handleAllProductsBought(PropertyChangeEvent propertyChangeEvent) {
         System.out.println("Enters event handler : handleAllProductsBought");
         double totalprice = 0;
@@ -188,5 +173,4 @@ public class PenguinMartViewController implements ViewController {
         viewModel.getShoppingCart().clear();
         viewModel.getSupport().firePropertyChange("updateStackpaneItems",null,null);
     }
-
 }
