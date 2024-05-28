@@ -46,7 +46,6 @@ public class PenguinMartViewModel {
     private void handleReservedProducts(PropertyChangeEvent propertyChangeEvent) {
         System.out.println("Enters event handler : handleReservedProducts");
         Product productReserved = (Product)propertyChangeEvent.getNewValue();
-        System.out.println(productReserved + " !!!!!! ");
         shoppingCart.add(productReserved);
         support.firePropertyChange("updateStackpaneItems",null,null);
         support.firePropertyChange("refreshTableView",null,null);

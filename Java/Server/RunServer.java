@@ -1,8 +1,6 @@
 package Server;
 
 import ModelDB.ProductDAOImpl;
-import Server.model.ReserveManager;
-import Server.model.ReserveManagerImpl;
 import Server.networking.ConnectionPool;
 import Server.networking.SocketHandler;
 
@@ -15,17 +13,20 @@ public class RunServer {
 
     public static void main(String[] args){
         try {
-            System.out.println("Starting socket server");
+            System.out.println("Starting ServerSocket");
             ServerSocket welcomeSocket = new ServerSocket(2910);
             ConnectionPool connectionPool = new ConnectionPool();
-            ReserveManager reserveManager = new ReserveManagerImpl();
             ProductDAOImpl productDAOImpl = ProductDAOImpl.getInstance();
 
             while (true) {
+                //Create new socket connection
                 Socket socket = welcomeSocket.accept();
-                SocketHandler socketHandler = new SocketHandler(socket, reserveManager, connectionPool, productDAOImpl); // Pass ProductDAOImpl instance
+
+
+                SocketHandler socketHandler = new SocketHandler(socket, connectionPool, productDAOImpl); // Pass ProductDAOImpl instance
+                //Added to ConnectionPool so broadcast function is available
                 connectionPool.add(socketHandler);
-                System.out.println("Network.Client connected");
+                System.out.println("Network Client connected");
                 new Thread(socketHandler).start();
             }
         } catch (IOException | SQLException e) {

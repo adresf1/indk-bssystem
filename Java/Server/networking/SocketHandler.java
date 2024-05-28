@@ -1,7 +1,5 @@
 package Server.networking;
-import ModelDB.ProductDAO;
 import ModelDB.ProductDAOImpl;
-import Server.model.ReserveManager;
 import Shared.TransferObject.Product;
 import Shared.TransferObject.Request;
 
@@ -17,7 +15,6 @@ import java.util.Map;
 
 public class SocketHandler implements Runnable {
     private Socket socket;
-    private ReserveManager reserveManager;
     private ObjectOutputStream outToClient;
     private ObjectInputStream inFromClient;
     private ConnectionPool connectionPool;
@@ -26,9 +23,8 @@ public class SocketHandler implements Runnable {
     // Define a map to map request types to corresponding actions
     private Map<String, RequestHandler> requestHandlers;
 
-    public SocketHandler(Socket socket, ReserveManager reserveManager, ConnectionPool connectionPool, ProductDAOImpl productDAOImpl) {
+    public SocketHandler(Socket socket, ConnectionPool connectionPool, ProductDAOImpl productDAOImpl) {
         this.socket = socket;
-        this.reserveManager = reserveManager;
         this.connectionPool = connectionPool;
         this.productDAOImpl = productDAOImpl;
 
@@ -36,7 +32,6 @@ public class SocketHandler implements Runnable {
         requestHandlers = new HashMap<>();
         requestHandlers.put("getProduct", this::handleGetProducts);
         requestHandlers.put("searchProductByID", this::handleSearchProductByID);
-        requestHandlers.put("ProductAdded", this::handleProductAdded);
         requestHandlers.put("requestAllProducts", this::handleGetAllProducts);
         requestHandlers.put("requestToReserveProduct", this::handleRequestToReserveProduct);
         requestHandlers.put("requestToBuyAllProducts", this::handleBuyAllProducts);
@@ -75,7 +70,6 @@ public class SocketHandler implements Runnable {
     private void handleGetProducts(Request request) throws IOException {
         String ID = (String) request.getArg();
         Product product = productDAOImpl.getProduct(ID);
-        System.out.println("Product type being sent: "+ product.getID());
         outToClient.writeObject(new Request("getProduct", product));
         outToClient.flush();
     }
@@ -102,16 +96,6 @@ public class SocketHandler implements Runnable {
         outToClient.flush();
     }
 
-    // Handler metode for "ProductAdded" request
-    private void handleProductAdded(Request request) throws IOException {
-        Product requestedProduct = (Product) request.getArg();
-        Product reservedProduct = reserveManager.reserveProduct(requestedProduct);
-        if (reservedProduct != null) {
-            outToClient.writeObject(new Request("ProductAdded", reservedProduct));
-            outToClient.flush();
-        }
-    }
-
     private void handleRequestToReserveProduct(Request request) throws IOException, SQLException {
         Product requestedProductToReserve = (Product) request.getArg();
         Product productDB = productDAOImpl.getProduct(requestedProductToReserve.getID());
@@ -128,6 +112,7 @@ public class SocketHandler implements Runnable {
 
     private void handleBuyAllProducts(Request request) throws IOException {
         ArrayList<Product> requestToBuyAllProducts = (ArrayList<Product>) request.getArg();
+        //Expand Server have Receipt table
         System.out.println("Products have been bought");
         outToClient.writeObject(new Request("boughtProducts",requestToBuyAllProducts));
         outToClient.flush();

@@ -1,15 +1,11 @@
 package Tests;
 
 import Model.ShoppingCart;
-import Network.SocketClient;
-import Server.model.ReserveManagerImpl;
 import Shared.TransferObject.Product;
 import Shared.Util.MyDate;
 
 import org.junit.jupiter.api.Test;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

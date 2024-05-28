@@ -10,7 +10,6 @@ public class ConnectionPool {
         this.serverConnections = new ArrayList<>();
 
     }
-
     public void add(SocketHandler serverConnection){
         serverConnections.add(serverConnection);
     }

@@ -2,9 +2,7 @@ package Network;
 
 import Shared.TransferObject.Product;
 import Shared.TransferObject.Request;
-import Shared.Util.Subject;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,9 +10,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class SocketClient implements Client, Subject
+public class SocketClient implements Client
 {
     private PropertyChangeSupport support;
     private ObjectOutputStream outToServer;
@@ -91,29 +88,6 @@ public class SocketClient implements Client, Subject
     public PropertyChangeSupport getSupport(){
         return this.support;
     }
-
-    @Override
-    public void startClient() {
-    }
-
-   @Override
-    public String getProduct(String id) {
-        try {
-          while(true)
-          {
-            outToServer.writeObject(new Request("getProduct", id));
-            outToServer.flush();
-            Request response = (Request) inFromServer.readObject();
-            System.out.println("getProduct: " + response.getArg().toString());
-            return  (String) response.getArg();
-          }
-
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     @Override
     public void reserveProduct(Product product) {
         try {
@@ -123,7 +97,6 @@ public class SocketClient implements Client, Subject
             throw new RuntimeException(e);
         }
     }
-
   public void reserveProductByID(String id) {
     try {
       outToServer.writeObject(new Request("ProductAdded", id));
@@ -132,13 +105,7 @@ public class SocketClient implements Client, Subject
       throw new RuntimeException(e);
     }
   }
-
-    @Override
-    public ArrayList<Product> getReservedProducts () {
-        return shoppingcart;
-    }
-
-        public void requestAllProducts() {
+  public void requestAllProducts() {
         try {
             outToServer.writeObject(new Request("requestAllProducts", null));
             outToServer.flush();
@@ -180,18 +147,5 @@ public class SocketClient implements Client, Subject
             throw new RuntimeException(e);
         }
         return null;
-    }
-
-    @Override public void addListener(String eventName,
-        PropertyChangeListener listener)
-    {
-        support.addPropertyChangeListener(eventName, listener);
-    }
-
-    @Override public void removeListener(String eventName,
-        PropertyChangeListener listener)
-    {
-        support.removePropertyChangeListener(eventName, listener);
-
     }
 }

@@ -66,7 +66,8 @@ public class PenguinMartViewController implements ViewController {
     public void init(ViewHandler vh, ViewModelFactory vmf) {
         this.vh = vh;
         this.viewModel=vmf.getPenguinMartVM();
-       // this.plv= new ProductListView(viewModel.getShoppingCart(),shoppingCartFX);
+        //Setup cells for table view
+        // this.plv= new ProductListView(viewModel.getShoppingCart(),shoppingCartFX);
         name.setCellValueFactory(new PropertyValueFactory<>("Name"));
         price.setCellValueFactory(new PropertyValueFactory<>("Price"));
         quantity.setCellValueFactory(new PropertyValueFactory<>("Quantity"));
@@ -75,12 +76,17 @@ public class PenguinMartViewController implements ViewController {
         category.setCellValueFactory(new PropertyValueFactory<>("Category"));
         unitType.setCellValueFactory(new PropertyValueFactory<>("UnitType"));
 
+        //Stop the items in table view shifting around
         name.setSortType(TableColumn.SortType.ASCENDING);
         presentedProducts.getSortOrder().add(name);
         presentedProducts.sort();
 
+        //Bind observable list to Tabel view
         presentedProducts.setItems(viewModel.getProductList());
+        //load all products into the observable list
         viewModel.requestAllProducts();
+
+        //Setup eventlisteners from server
         viewModel.getSupport().addPropertyChangeListener("updateStackpaneItems",this::updateShoppingcart );
         viewModel.getSupport().addPropertyChangeListener("refreshTableView",this::refreshTableView );
         viewModel.getSupport().addPropertyChangeListener("allProductsBought_event", this::handleAllProductsBought);
@@ -110,14 +116,13 @@ public class PenguinMartViewController implements ViewController {
                 cell.getElement().setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
+                        //Self implemented method of getSelectedItem from a stackpane
                         itemToRemove = cell.getID();
-                        System.out.println("This item is going to be removed: " + itemToRemove);
-                    }
+                        }
                 });
-
+                //Add elements to stackpane
                 cartContainer.getChildren().add(cell.getElement());
             }
-            System.out.println("updateShoppingcart");
         });
     }
 
@@ -162,11 +167,9 @@ public class PenguinMartViewController implements ViewController {
     }
 
     private void handleAllProductsBought(PropertyChangeEvent propertyChangeEvent) {
-        System.out.println("Enters event handler : handleAllProductsBought");
         double totalprice = 0;
         for (Product product: (ArrayList<Product>) propertyChangeEvent.getNewValue())
         {
-            System.out.println("I'm in the for loop");
             totalprice += (product.getPrice()*product.getQuantity());
         }
         addDynamicLabel("Your total price is: " + totalprice);
