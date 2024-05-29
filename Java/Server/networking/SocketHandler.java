@@ -30,7 +30,6 @@ public class SocketHandler implements Runnable {
 
         // Initialize the maps
         requestHandlers = new HashMap<>();
-        requestHandlers.put("getProduct", this::handleGetProducts);
         requestHandlers.put("searchProductByID", this::handleSearchProductByID);
         requestHandlers.put("requestAllProducts", this::handleGetAllProducts);
         requestHandlers.put("requestToReserveProduct", this::handleRequestToReserveProduct);
@@ -66,26 +65,11 @@ public class SocketHandler implements Runnable {
         }
     }
 
-    // Handler metode for "getProducts" request
-    private void handleGetProducts(Request request) throws IOException {
-        String ID = (String) request.getArg();
-        Product product = productDAOImpl.getProduct(ID);
-        outToClient.writeObject(new Request("getProduct", product));
-        outToClient.flush();
-    }
-
     // Handler metode for "searchProductByID" request
     private void handleSearchProductByID(Request request) throws IOException {
         String ID = (String) request.getArg();
-        Product product1 = productDAOImpl.getProduct("1");
-        Product product2 = productDAOImpl.getProduct("2");
-        Product product3 = productDAOImpl.getProduct("3");
-        Product product4 = productDAOImpl.getProduct("4");
         ArrayList<Product> searchResults = new ArrayList<>();
-        searchResults.add(product1);
-        searchResults.add(product2);
-        searchResults.add(product3);
-        searchResults.add(product4);
+        searchResults = productDAOImpl.searchProductByID(ID);
         outToClient.writeObject(new Request("searchResults", searchResults));
         outToClient.flush();
     }
