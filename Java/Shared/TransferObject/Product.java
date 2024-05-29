@@ -146,7 +146,7 @@ public class Product implements Serializable, Stock {
 
     public void setExpirationDate(MyDate expirationDate) {
         if(expirationDate != null && expirationDate.isBefore(productionDate)){
-            throw new RuntimeException("Expiration date is before production date");
+            throw new IllegalArgumentException("Expiration date is before production date");
         }
         this.expirationDate = expirationDate;
     }
@@ -157,21 +157,21 @@ public class Product implements Serializable, Stock {
 
     public void setPrice(double price) {
         if(price < 0){
-            throw new RuntimeException("Price cannot be under 0.00");
+            throw new IllegalArgumentException("Price cannot be under 0.00");
         }
         this.price = price;
     }
 
     public void setQuantity(double quantity) {
         if(quantity < 0){
-            throw new RuntimeException("Quantity cannot be under 0");
+            throw new IllegalArgumentException("Quantity cannot be under 0");
         }
         this.quantity = quantity;
     }
 
     public void setLowStock(int lowStock) {
         if(lowStock < 0 ){
-            throw new RuntimeException("lowStock cannot be under 0");
+            throw new IllegalArgumentException("lowStock cannot be under 0");
         }
 
         this.lowStock = lowStock;
@@ -270,7 +270,6 @@ public class Product implements Serializable, Stock {
     @Override
     public void addCertification(Certification c) {
 
-        //Todo: Certification class should override equals method
         if(certificates.contains(c)){
             throw new IllegalArgumentException("Certification already exist");
         }
@@ -281,7 +280,6 @@ public class Product implements Serializable, Stock {
     @Override
     public void editCertification(Certification c) {
 
-        //Todo: method could be shortened with an equal method on the Certification class
         for (int i = 0; i < certificates.size(); i++) {
             if (certificates.get(i).getID().equals(c.getID())) {
                 certificates.set(i, c);
@@ -294,7 +292,6 @@ public class Product implements Serializable, Stock {
     @Override
     public boolean isExpired() {
         MyDate today = MyDate.today();
-        //Todo: Test this i don't think this is correct - use isbefore()
         return expirationDate.compareTo(today) < 0;
     }
 

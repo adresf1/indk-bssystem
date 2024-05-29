@@ -74,24 +74,38 @@ public class SocketHandler implements Runnable {
         outToClient.flush();
     }
 
-    private void handleGetAllProducts(Request request) throws IOException, SQLException {
-        ArrayList<Product> allProducts = productDAOImpl.getAllProducts();
-        outToClient.writeObject(new Request("allProductsReturned", allProducts));
-        outToClient.flush();
-    }
-
-    private void handleRequestToReserveProduct(Request request) throws IOException, SQLException {
-        Product requestedProductToReserve = (Product) request.getArg();
-        Product productDB = productDAOImpl.getProduct(requestedProductToReserve.getID());
-        productDB.setQuantity(productDB.getQuantity() - requestedProductToReserve.getQuantity());
-        productDAOImpl.update(productDB);
-        if (requestedProductToReserve != null){
-            outToClient.writeObject(new Request("reservedProduct",requestedProductToReserve));
+    private void handleGetAllProducts(Request request) throws IOException {
+        try {
+            ArrayList<Product> allProducts = productDAOImpl.getAllProducts();
+            outToClient.writeObject(new Request("allProductsReturned", allProducts));
             outToClient.flush();
 
+        } catch (IllegalArgumentException | SQLException exception) {
+            exception.printStackTrace();
+            outToClient.writeObject(new Request("errorMessage", request));
+            outToClient.flush();
         }
-        Request updateAllItems = new Request("allProductsReturned", productDAOImpl.getAllProducts());
-        outToClient.writeObject(updateAllItems);
+    }
+
+    private void handleRequestToReserveProduct(Request request) throws IOException {
+        Product requestedProductToReserve = (Product) request.getArg();
+        try {
+            Product productDB = productDAOImpl.getProduct(requestedProductToReserve.getID());
+            productDB.setQuantity(productDB.getQuantity() - requestedProductToReserve.getQuantity());
+            productDAOImpl.update(productDB);
+
+            if (requestedProductToReserve != null) {
+                outToClient.writeObject(new Request("reservedProduct", requestedProductToReserve));
+                outToClient.flush();
+            }
+            Request updateAllItems = new Request("allProductsReturned", productDAOImpl.getAllProducts());
+            connectionPool.broadcast(updateAllItems,null);
+
+        } catch (IllegalArgumentException | SQLException exception){
+            exception.printStackTrace();
+            outToClient.writeObject(new Request("errorMessage",request));
+            outToClient.flush();
+        }
     }
 
     private void handleBuyAllProducts(Request request) throws IOException {
@@ -102,16 +116,22 @@ public class SocketHandler implements Runnable {
         outToClient.flush();
     }
 
-    private void handleRemoveProduct(Request request) throws SQLException, IOException {
+    private void handleRemoveProduct(Request request) throws IOException {
         Product requestedProductToRemove = (Product) request.getArg();
-        Product productDB = productDAOImpl.getProduct(requestedProductToRemove.getID());
-        productDB.setQuantity(productDB.getQuantity() + requestedProductToRemove.getQuantity());
-        productDAOImpl.update(productDB);
-        //TODO: Handle if delete throws SQL-error
-        outToClient.writeObject(new Request("removedProduct",requestedProductToRemove));
-        Request updateAllItems = new Request("allProductsReturned", productDAOImpl.getAllProducts());
-        outToClient.writeObject(updateAllItems);
-        outToClient.flush();
+        try {
+            Product productDB = productDAOImpl.getProduct(requestedProductToRemove.getID());
+            productDB.setQuantity(productDB.getQuantity() + requestedProductToRemove.getQuantity());
+            productDAOImpl.update(productDB);
+            outToClient.writeObject(new Request("removedProduct", requestedProductToRemove));
+            Request updateAllItems = new Request("allProductsReturned", productDAOImpl.getAllProducts());
+            connectionPool.broadcast(updateAllItems,null);
+            outToClient.flush();
+
+        } catch (IllegalArgumentException | SQLException exception) {
+            exception.printStackTrace();
+            outToClient.writeObject(new Request("errorMessage", request));
+            outToClient.flush();
+        }
     }
 
     public void sendRequest(Request request) {

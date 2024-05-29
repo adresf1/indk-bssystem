@@ -51,7 +51,7 @@ public class PenguinMartViewController implements ViewController {
     @FXML
     private StackPane shoppingCartFX;
     @FXML
-    private TextField textinput;
+    private TextField numberToBasket;
 
     @FXML
     private TextField UsernameTextfield;
@@ -75,6 +75,7 @@ public class PenguinMartViewController implements ViewController {
         barcode.setCellValueFactory(new PropertyValueFactory<>("Barcode"));
         category.setCellValueFactory(new PropertyValueFactory<>("Category"));
         unitType.setCellValueFactory(new PropertyValueFactory<>("UnitType"));
+        numberToBasket.setPromptText("Antal");
 
         //Stop the items in table view shifting around
         name.setSortType(TableColumn.SortType.ASCENDING);
@@ -172,8 +173,9 @@ public class PenguinMartViewController implements ViewController {
         {
             totalprice += (product.getPrice()*product.getQuantity());
         }
-        addDynamicLabel("Your total price is: " + totalprice);
+        addDynamicLabel("Du købte for: " + totalprice);
         viewModel.getShoppingCart().clear();
         viewModel.getSupport().firePropertyChange("updateStackpaneItems",null,null);
     }
+
 }

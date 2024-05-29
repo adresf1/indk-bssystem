@@ -35,8 +35,9 @@ public class BatchNumberDB {
         String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=" + database;
         return DriverManager.getConnection(
                 url,
-                "postgres", "Kika12345");
+                "postgres", "KarlDen12.");
     }
+    //TODO: Hust at ændre password her
 
     public BatchNumber creat(String id, String database, String description, String originCountry, String organization, String foreignKey) throws SQLException {
         try (Connection connection = getConnection(warehouseDB)) {

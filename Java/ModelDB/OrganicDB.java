@@ -37,8 +37,9 @@ public class OrganicDB {
         String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=" + database;
         return DriverManager.getConnection(
                 url,
-                "postgres", "Kika12345");
+                "postgres", "KarlDen12.");
     }
+    //TODO: Husk at ændre password her
 
     public Organic creat(String id, String database, String description,
                          MyDate certificationDate, MyDate expirationDate, String originCountry,

@@ -6,35 +6,41 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.PenguinMartViewController">
+<AnchorPane prefHeight="451.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.PenguinMartViewController">
    <children>
-      <BorderPane layoutX="-1.0" layoutY="1.0" prefHeight="400.0" prefWidth="594.0">
+      <BorderPane layoutX="-1.0" layoutY="1.0" prefHeight="451.0" prefWidth="766.0">
          <right>
-            <StackPane fx:id="shoppingCartFX" prefHeight="273.0" prefWidth="176.0" BorderPane.alignment="CENTER" />
+            <StackPane fx:id="shoppingCartFX" prefHeight="351.0" prefWidth="332.0" BorderPane.alignment="CENTER" />
          </right>
          <top>
             <HBox prefHeight="100.0" prefWidth="347.0" BorderPane.alignment="CENTER">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="605.0">
+                  <HBox prefHeight="100.0" prefWidth="885.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#onPressed_moveToBasket" text="Tilføj til Kurve">
+                        <Button mnemonicParsing="false" onAction="#onPressed_moveToBasket" text="Tilføj til Kurv">
                            <HBox.margin>
-                              <Insets left="30.0" top="50.0" />
+                              <Insets left="50.0" top="50.0" />
+                           </HBox.margin>
+                        </Button>
+                        <TextField fx:id="numberToBasket" opacity="0.95" prefHeight="25.0" prefWidth="75.0">
+                           <HBox.margin>
+                              <Insets top="50.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#onPressed_checkOutBasket" text="Køb">
+                           <HBox.margin>
+                              <Insets left="280.0" top="50.0" />
                            </HBox.margin>
                         </Button>
                         <Button mnemonicParsing="false" onAction="#onPressed_removeItem" text="Fjern fra kurv">
                            <HBox.margin>
-                              <Insets left="100.0" top="50.0" />
-                           </HBox.margin>
-                        </Button>
-                        <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#onPressed_checkOutBasket" text="Køb">
-                           <HBox.margin>
-                              <Insets left="100.0" top="50.0" />
+                              <Insets left="200.0" top="50.0" />
                            </HBox.margin>
                         </Button>
                      </children>
@@ -43,21 +49,21 @@
             </HBox>
          </top>
          <left>
-            <TabPane prefHeight="297.0" prefWidth="423.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <TabPane prefHeight="351.0" prefWidth="549.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
               <tabs>
                 <Tab text="Products">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TableView fx:id="presentedProducts" layoutX="2.0" layoutY="-2.0" prefHeight="270.0" prefWidth="421.0">
+                              <TableView fx:id="presentedProducts" layoutX="2.0" layoutY="-2.0" prefHeight="270.0" prefWidth="547.0">
                                 <columns>
                                   <TableColumn fx:id="name" prefWidth="63.333338499069214" text="Name" />
                                     <TableColumn fx:id="price" prefWidth="58.66668701171875" text="Price" />
                                     <TableColumn fx:id="quantity" prefWidth="55.999961853027344" text="Quantity" />
-                                    <TableColumn fx:id="expirationDate" prefWidth="67.3333740234375" text="ExpirationDate" />
-                                    <TableColumn fx:id="barcode" prefWidth="38.00007629394531" text="Barcode" />
-                                    <TableColumn fx:id="category" prefWidth="58.66668701171875" text="Category" />
-                                    <TableColumn fx:id="unitType" prefWidth="76.0" text="UnitType" />
+                                    <TableColumn fx:id="expirationDate" prefWidth="122.0" text="ExpirationDate" />
+                                    <TableColumn fx:id="barcode" prefWidth="82.0" text="Barcode" />
+                                    <TableColumn fx:id="category" prefWidth="82.0" text="Category" />
+                                    <TableColumn fx:id="unitType" prefWidth="81.0" text="UnitType" />
                                 </columns>
                               </TableView>
                            </children>
