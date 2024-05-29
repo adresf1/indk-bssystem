@@ -18,11 +18,6 @@ public class ShopSystemManager implements IShopSystemManager {
     }
 
     @Override
-    public ArrayList<Product> getAllProducts() {
-        return client.searchProductByID("1");
-    }
-
-    @Override
     public PropertyChangeSupport getSuppoert() {
         return support;
     }

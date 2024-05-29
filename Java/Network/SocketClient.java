@@ -88,23 +88,7 @@ public class SocketClient implements Client
     public PropertyChangeSupport getSupport(){
         return this.support;
     }
-    @Override
-    public void reserveProduct(Product product) {
-        try {
-            outToServer.writeObject(new Request("ProductAdded", product));
-            outToServer.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-  public void reserveProductByID(String id) {
-    try {
-      outToServer.writeObject(new Request("ProductAdded", id));
-      outToServer.flush();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
+
   public void requestAllProducts() {
         try {
             outToServer.writeObject(new Request("requestAllProducts", null));

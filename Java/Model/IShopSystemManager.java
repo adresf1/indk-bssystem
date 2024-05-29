@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public interface IShopSystemManager {
-
-    ArrayList<Product> getAllProducts();
-
     PropertyChangeSupport getSuppoert();
 
     void requestAllProducts();

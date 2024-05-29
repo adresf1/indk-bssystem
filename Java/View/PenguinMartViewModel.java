@@ -64,13 +64,6 @@ public class PenguinMartViewModel {
         temp.setQuantity(1);
         shopSystemManager.requestToReserveProduct(temp);
     }
-
-    public void allProductsToStackPane(){
-        ArrayList<Product> products = shopSystemManager.getAllProducts();
-        for(Product item : products){
-            shoppingCart.add(item);
-        }
-    }
     public ObservableList<Product> getProductList()
     {
         return productList;
@@ -80,10 +73,6 @@ public class PenguinMartViewModel {
         return shoppingCart;
     }
 
-    public ObservableList<Product> getAllProducts(){
-        ObservableList<Product> templist = FXCollections.observableList(shopSystemManager.getAllProducts());
-        return templist;
-    }
     public void requestAllProducts()
     {
         shopSystemManager.requestAllProducts();

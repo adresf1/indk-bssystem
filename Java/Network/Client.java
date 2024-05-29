@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public interface Client {
-    void reserveProduct(Product product);
     ArrayList<Product> searchProductByID(String ID);
     PropertyChangeSupport getSupport();
     void requestAllProducts();
