@@ -24,8 +24,6 @@ public class PenguinMartViewModel {
     public PenguinMartViewModel(IShopSystemManager shopSystemManager) {
         this.shopSystemManager = shopSystemManager;
         support = shopSystemManager.getSuppoert();
-        this.username = new SimpleStringProperty();
-        this.textinput = new SimpleStringProperty();
 
         shoppingCart = FXCollections.observableList(new ArrayList<Product>());
         productList = FXCollections.observableList(new ArrayList<Product>());
@@ -61,7 +59,6 @@ public class PenguinMartViewModel {
 
     public void moveToBasket(Product p) throws IOException {
         Product temp = p.copy();
-        temp.setQuantity(1);
         shopSystemManager.requestToReserveProduct(temp);
     }
     public ObservableList<Product> getProductList()

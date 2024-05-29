@@ -77,11 +77,19 @@ public class PenguinMartViewController implements ViewController {
         unitType.setCellValueFactory(new PropertyValueFactory<>("UnitType"));
         numberToBasket.setPromptText("Antal");
 
-        //Stop the items in table view shifting around
+        // Add listener to restrict input to numbers only
+        numberToBasket.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                numberToBasket.setText(oldValue);
+            }
+        });
+
+        /*//Stop the items in table view shifting around
         name.setSortType(TableColumn.SortType.ASCENDING);
         presentedProducts.getSortOrder().add(name);
         presentedProducts.sort();
 
+        */
         //Bind observable list to Tabel view
         presentedProducts.setItems(viewModel.getProductList());
         //load all products into the observable list
@@ -131,6 +139,13 @@ public class PenguinMartViewController implements ViewController {
     public void onPressed_moveToBasket() throws IOException {
         if(presentedProducts.getSelectionModel().getSelectedItem() != null){
             Product p = presentedProducts.getSelectionModel().getSelectedItem();
+            if ((numberToBasket.textProperty().toString()).isEmpty())
+                p.setQuantity(1);
+
+            else {
+                p.setQuantity(Double.parseDouble(numberToBasket.getText()));
+            }
+            numberToBasket.clear();
             viewModel.moveToBasket(p);
         }
     }

@@ -26,8 +26,9 @@ public class ProductListCell {
         name = new Text();
         price = new Text();
         expirationDate = new Text();
+        quantity = new Text();
         ID = new Text();
-        VBox vBox = new VBox(name, price, expirationDate);
+        VBox vBox = new VBox(name, price, expirationDate,quantity);
         content = new HBox(new Label("[Graphic]"), vBox);
         content.setSpacing(20);
         System.out.println("Constructor ProductListCell");
@@ -36,6 +37,7 @@ public class ProductListCell {
         name.setText(product.getName());
         price.setText(String.format("%1$,.2f", product.getPrice()));
         expirationDate.setText(product.getExpirationDate().toString());
+        quantity.setText(Double.toString(product.getQuantity()));
     }
 
     public HBox getElement()
@@ -51,6 +53,7 @@ public class ProductListCell {
             name.setText(item.getName());
             price.setText(String.format("%1$,.2f", item.getPrice()));
             expirationDate.setText(item.getExpirationDate().toString());
+            quantity.setText(Double.toString(item.getQuantity()));
             System.out.println("updatedItem activated");
         }
 
