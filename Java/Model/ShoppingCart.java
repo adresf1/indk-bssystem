@@ -7,6 +7,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
+//Early implementation and test of the Observer Pattern.
+
 public class ShoppingCart implements PropertyChangeListener {
   private ArrayList<Product> products;
   private PropertyChangeSupport support;
