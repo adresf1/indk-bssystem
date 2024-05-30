@@ -140,8 +140,9 @@ public class PenguinMartViewController implements ViewController {
         if(presentedProducts.getSelectionModel().getSelectedItem() != null){
             Product p = presentedProducts.getSelectionModel().getSelectedItem();
             if ((numberToBasket.textProperty().toString()).isEmpty())
-                p.setQuantity(1);
-
+            {
+                //       p.setQuantity(1);
+            }
             else {
                 p.setQuantity(Double.parseDouble(numberToBasket.getText()));
             }

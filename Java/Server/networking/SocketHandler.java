@@ -18,7 +18,7 @@ public class SocketHandler implements Runnable {
     private ObjectOutputStream outToClient;
     private ObjectInputStream inFromClient;
     private ConnectionPool connectionPool;
-    private ProductDAOImpl productDAOImpl;
+  //  private ProductDAOImpl productDAOImpl;
 
     // Define a map to map request types to corresponding actions
     private Map<String, RequestHandler> requestHandlers;
@@ -26,7 +26,7 @@ public class SocketHandler implements Runnable {
     public SocketHandler(Socket socket, ConnectionPool connectionPool, ProductDAOImpl productDAOImpl) {
         this.socket = socket;
         this.connectionPool = connectionPool;
-        this.productDAOImpl = productDAOImpl;
+      //  this.productDAOImpl = productDAOImpl;
 
         // Initialize the maps
         requestHandlers = new HashMap<>();
@@ -66,17 +66,19 @@ public class SocketHandler implements Runnable {
     }
 
     // Handler metode for "searchProductByID" request
-    private void handleSearchProductByID(Request request) throws IOException {
+    private void handleSearchProductByID(Request request)
+        throws IOException, SQLException
+    {
         String ID = (String) request.getArg();
         ArrayList<Product> searchResults = new ArrayList<>();
-        searchResults = productDAOImpl.searchProductByID(ID);
+        searchResults = ProductDAOImpl.getInstance().searchProductByID(ID);
         outToClient.writeObject(new Request("searchResults", searchResults));
         outToClient.flush();
     }
 
     private void handleGetAllProducts(Request request) throws IOException {
         try {
-            ArrayList<Product> allProducts = productDAOImpl.getAllProducts();
+            ArrayList<Product> allProducts = ProductDAOImpl.getInstance().getAllProducts();
             outToClient.writeObject(new Request("allProductsReturned", allProducts));
             outToClient.flush();
 
@@ -90,15 +92,16 @@ public class SocketHandler implements Runnable {
     private void handleRequestToReserveProduct(Request request) throws IOException {
         Product requestedProductToReserve = (Product) request.getArg();
         try {
-            Product productDB = productDAOImpl.getProduct(requestedProductToReserve.getID());
+            ProductDAOImpl productDAO = ProductDAOImpl.getInstance();
+            Product productDB = productDAO.getProduct(requestedProductToReserve.getID());
             productDB.setQuantity(productDB.getQuantity() - requestedProductToReserve.getQuantity());
-            productDAOImpl.update(productDB);
+            productDAO.update(productDB);
 
             if (requestedProductToReserve != null) {
                 outToClient.writeObject(new Request("reservedProduct", requestedProductToReserve));
                 outToClient.flush();
             }
-            Request updateAllItems = new Request("allProductsReturned", productDAOImpl.getAllProducts());
+            Request updateAllItems = new Request("allProductsReturned", productDAO.getAllProducts());
             connectionPool.broadcast(updateAllItems,null);
 
         } catch (IllegalArgumentException | SQLException exception){
@@ -119,11 +122,12 @@ public class SocketHandler implements Runnable {
     private void handleRemoveProduct(Request request) throws IOException {
         Product requestedProductToRemove = (Product) request.getArg();
         try {
-            Product productDB = productDAOImpl.getProduct(requestedProductToRemove.getID());
+            ProductDAOImpl productDAO = ProductDAOImpl.getInstance();
+            Product productDB = productDAO.getProduct(requestedProductToRemove.getID());
             productDB.setQuantity(productDB.getQuantity() + requestedProductToRemove.getQuantity());
-            productDAOImpl.update(productDB);
+            productDAO.update(productDB);
             outToClient.writeObject(new Request("removedProduct", requestedProductToRemove));
-            Request updateAllItems = new Request("allProductsReturned", productDAOImpl.getAllProducts());
+            Request updateAllItems = new Request("allProductsReturned", productDAO.getAllProducts());
             connectionPool.broadcast(updateAllItems,null);
             outToClient.flush();
 

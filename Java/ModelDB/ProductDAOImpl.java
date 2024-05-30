@@ -130,7 +130,7 @@ public class ProductDAOImpl implements ProductDAO
   {
     String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=" + database;
     System.out.println(url);
-    return DriverManager.getConnection(url, "postgres", "KarlDen12.");
+    return DriverManager.getConnection(url, "postgres", "Kika12345");
   }
 
   @Override public void update(Product product) throws SQLException
