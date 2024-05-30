@@ -47,7 +47,6 @@ class ProductDAOImplTest
         productDAO.creatProduct(product);
       }
     }
-    System.out.println("SetUP done");
   }
 
   /*@Test void creatProductTest() throws SQLException, SQLException
