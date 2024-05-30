@@ -1,4 +1,4 @@
-CREATE SCHEMA WareHouse;
+CREATE SCHEMA testWarehouse;
 
 SET search_path To WareHouse;
 
